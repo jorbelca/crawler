@@ -1,9 +1,12 @@
 <script>
-  import { searchUrl } from "../Services/search.service.js"
+  import { saveUrl, searchUrl } from "../Services/searchService.js"
 
   let url = "https://www.deporvillage.com/kettlebell-ruster-cast-iron-28-kg"
   let selectorClass = ".Product_product-price__2P9So"
+  let time
+  let initialData
 
+  // SEARCH
   const handleInputUrl = (event) => {
     url = event.target.value
   }
@@ -16,7 +19,27 @@
 
     if (response) {
       span.innerText = response.response
+      initialData = response.response
     }
+  }
+
+  // SAVE
+  const handleSelect = (event) => {
+    time = event.target.value
+  }
+  const handleSave = async () => {
+    if (time === undefined || null)
+      return console.log("Please select a date of actualization")
+    const userID = window.localStorage.getItem("userID")
+    const response = await saveUrl(
+      url,
+      selectorClass,
+      Number(time),
+      initialData,
+      userID
+    )
+
+    if (response) console.log(response.statusText)
   }
 </script>
 
@@ -34,7 +57,20 @@
     </div>
     <button type="submit">Enviar</button>
   </form>
-  <span id="value" />
+  <div>
+    <span id="value" />
+    <form on:submit|preventDefault={handleSave}>
+      <button>Guardar </button>
+      <select on:change={handleSelect}>
+        <option>Select the duration</option>
+        <option value="1">1 hour</option>
+        <option value="2">2 hour</option>
+        <option value="5">5 hour</option>
+        <option value="16">16 hour</option>
+        <option value="24">24 hour</option>
+      </select>
+    </form>
+  </div>
 </main>
 
 <style>

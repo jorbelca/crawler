@@ -1,15 +1,26 @@
 <script>
-  let username = ""
+  import { loginUser } from "../Services/login"
+
+  let email = ""
   let password = ""
 
   const handleInputU = (event) => {
-    username = event.target.value
+    email = event.target.value
   }
   const handleInputP = (event) => {
     password = event.target.value
   }
-  const handleSubmit = () => {
-    console.log(username, password)
+  const handleSubmit = async () => {
+    const response = await loginUser(email, password)
+    const res = await response.json()
+
+    if (response.status === 200) {
+      document.cookie = response.cookie
+      window.localStorage.setItem("userID", res)
+      return {
+        redirect: "http://localhost:3000/ops",
+      }
+    }
   }
 </script>
 
@@ -18,14 +29,14 @@
 
   <form on:submit|preventDefault={handleSubmit}>
     <div>
-      <label for="username">Username</label>
-      <input value={username} type="text" on:input={handleInputU} />
+      <label for="email">Email</label>
+      <input value={email} type="text" on:input={handleInputU} />
     </div>
     <div>
       <label for="password">Password</label>
       <input value={password} type="password" on:input={handleInputP} />
     </div>
-    <button type="submit">Enviar</button>
+    <button type="submit">Log In</button>
   </form>
 </main>
 
@@ -41,11 +52,6 @@
     margin: 0 auto;
   }
 
-  img {
-    height: 10rem;
-    width: 10rem;
-  }
-
   h1 {
     color: #ff3e00;
     text-transform: uppercase;
@@ -58,10 +64,6 @@
 
   @media (min-width: 480px) {
     h1 {
-      max-width: none;
-    }
-
-    p {
       max-width: none;
     }
   }
