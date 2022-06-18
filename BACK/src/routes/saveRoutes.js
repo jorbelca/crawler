@@ -15,6 +15,7 @@ saveRouter.post('/', async (request, response) => {
   const entryAlreadyInDB = await Operation.find({ url: url, selector: selector })
 
   if (entryAlreadyInDB.length > 0) {
+
     try {
       const res = await Operation.updateOne({ selector: selector },
         { $push: { data: { date: getTime(), data: initialData } } })

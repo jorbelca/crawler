@@ -8,7 +8,7 @@ getDataRouter.post('/', async (request, response) => {
   const { userID } = request.body
 
   try {
-    const results = await Operation.find({ user: userID }).populate("user", { username: 1 }).select({ url: 1, data: 1, user: 1 })
+    const results = await Operation.find({ user: userID }).populate("user", { username: 1 }).select({ url: 1, data: 1, user: 0 })
     if (results) response.status(200).send( results );
     console.log(results);
   } catch (error) {
