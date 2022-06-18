@@ -7,12 +7,7 @@
   let initialData
 
   // SEARCH
-  const handleInputUrl = (event) => {
-    url = event.target.value
-  }
-  const handleInputClass = (event) => {
-    selectorClass = event.target.value
-  }
+
   const handleSubmit = async () => {
     const response = await searchUrl(url, selectorClass)
     const span = document.getElementById("value")
@@ -24,9 +19,6 @@
   }
 
   // SAVE
-  const handleSelect = (event) => {
-    time = event.target.value
-  }
   const handleSave = async () => {
     if (time === undefined || null)
       return console.log("Please select a date of actualization")
@@ -49,11 +41,11 @@
   <form on:submit|preventDefault={handleSubmit}>
     <div>
       <label for="username">Url</label>
-      <input value={url} type="text" on:input={handleInputUrl} />
+      <input bind:value={url} type="text" />
     </div>
     <div>
       <label for="password">Selector</label>
-      <input value={selectorClass} type="text" on:input={handleInputClass} />
+      <input bind:value={selectorClass} type="text" />
     </div>
     <button type="submit">Enviar</button>
   </form>
@@ -61,7 +53,7 @@
     <span id="value" />
     <form on:submit|preventDefault={handleSave}>
       <button>Guardar </button>
-      <select on:change={handleSelect}>
+      <select bind:value={time}>
         <option>Select the duration</option>
         <option value="1">1 hour</option>
         <option value="2">2 hour</option>
