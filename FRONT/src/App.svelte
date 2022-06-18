@@ -19,7 +19,7 @@
       <a href="">Logout</a>
     </nav>
 
-    <Route path="/">
+    <Route path="/home">
       <Home />
     </Route>
     <Route path="/login">

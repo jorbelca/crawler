@@ -5,15 +5,6 @@
   let password = ""
   let email = ""
 
-  const handleInputEmail = (event) => {
-    email = event.target.value
-  }
-  const handleInputUsername = (event) => {
-    username = event.target.value
-  }
-  const handleInputPassword = (event) => {
-    password = event.target.value
-  }
   const handleSubmit = async () => {
     const response = await registerUser(email, username, password)
 
@@ -31,30 +22,15 @@
   <form on:submit|preventDefault={handleSubmit}>
     <div>
       <label htmlfor="registerEmail">Email</label>
-      <input
-        id="registerEmail"
-        type="email"
-        value={email}
-        on:input={handleInputEmail}
-      />
+      <input id="registerEmail" type="email" bind:value={email} />
     </div>
     <div>
       <label htmlfor="registerUsername">Username</label>
-      <input
-        id="registerUsername"
-        type="text"
-        value={username}
-        on:input={handleInputUsername}
-      />
+      <input id="registerUsername" type="text" bind:value={username} />
     </div>
     <div>
       <label htmlfor="registerPassword">Password</label>
-      <input
-        id="registerPassword"
-        type="password"
-        value={password}
-        on:input={handleInputPassword}
-      />
+      <input id="registerPassword" type="password" bind:value={password} />
     </div>
 
     <button type="submit">Register</button>

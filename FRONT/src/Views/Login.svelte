@@ -4,12 +4,6 @@
   let email = ""
   let password = ""
 
-  const handleInputU = (event) => {
-    email = event.target.value
-  }
-  const handleInputP = (event) => {
-    password = event.target.value
-  }
   const handleSubmit = async () => {
     const response = await loginUser(email, password)
     const res = await response.json()
@@ -30,11 +24,11 @@
   <form on:submit|preventDefault={handleSubmit}>
     <div>
       <label for="email">Email</label>
-      <input value={email} type="text" on:input={handleInputU} />
+      <input bind:value={email} type="text" />
     </div>
     <div>
       <label for="password">Password</label>
-      <input value={password} type="password" on:input={handleInputP} />
+      <input bind:value={password} type="password" />
     </div>
     <button type="submit">Log In</button>
   </form>
