@@ -15,6 +15,7 @@ loginRouter.post('/', async (request, response) => {
   }
 
   let user = returnedUser[0]
+
   const passwordCorrect = user === null ? false : await bcrypt.compare(password, user.password)
 
 
@@ -24,7 +25,7 @@ loginRouter.post('/', async (request, response) => {
     session.userID = JSON.stringify(user._id);
   }
   else {
-    return response.send('Invalid username or password');
+    return response.status(401).json('Error:Invalid username or password');
   }
 
 
