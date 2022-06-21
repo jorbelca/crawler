@@ -11,13 +11,13 @@ const saveRouter = express.Router()
 
 saveRouter.post('/', async (request, response) => {
   const { url, selector, time, initialData, userID } = request.body
-
-  const entryAlreadyInDB = await Operation.find({ url: url, selector: selector })
+  console.log(userID);
+  const entryAlreadyInDB = await Operation.find({ url: url, selector: selector, user: userID })
 
   if (entryAlreadyInDB.length > 0) {
 
     try {
-      const res = await Operation.updateOne({ selector: selector },
+      const res = await Operation.updateOne({ selector: selector, user: userID, url: url },
         { $push: { data: { date: getTime(), data: initialData } } })
 
       return response.status(200).send('OK')
@@ -29,7 +29,6 @@ saveRouter.post('/', async (request, response) => {
 
 
   }
-
   const newEntry = new Operation({
     ...request.body,
     data: [{ date: getTime(), data: initialData }]
@@ -42,7 +41,7 @@ saveRouter.post('/', async (request, response) => {
     // USER OPERATIONS SAVE
     await User.updateOne({ _id: userID }, { $push: { operations: res._id } })
 
-    return response.status(200).send(res)
+    return response.status(200).json('Saved!')
   } catch (error) {
     console.error(error);
 
