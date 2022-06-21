@@ -1,8 +1,8 @@
 const apiUrl = "http://localhost:3030/api"
 
-export const eliminateUser = async (userID) => {
+export const eliminateOperation = async (userID, id) => {
   try {
-    const response = await fetch(`${apiUrl}/eliminate-user`, {
+    const response = await fetch(`${apiUrl}/eliminate-operation/${id}`, {
       method: "DELETE",
       mode: "cors",
       body: JSON.stringify({ userID: userID }),

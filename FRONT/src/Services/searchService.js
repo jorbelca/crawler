@@ -33,7 +33,7 @@ export const saveUrl = async (url, selectorClass, time, initialData, userID) => 
         Accept: "application/json",
       },
     })
-    return response.json()
+    return response
   } catch (error) {
     console.log(error);
     return error
