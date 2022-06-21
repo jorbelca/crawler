@@ -8,7 +8,6 @@ const registerRouter = express.Router()
 registerRouter.post('/', async (request, response) => {
   const { password } = request.body
 
-
   if (!password || password === undefined) {
     return response.status(400).json({ error: "Password field is wrong" })
   } else if (password.length < 3) {

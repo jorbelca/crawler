@@ -14,6 +14,8 @@ import session from 'express-session'
 import cookieParser from 'cookie-parser';
 import MongoStore from 'connect-mongo'
 import getDataRouter from './routes/getAllData.js';
+import profileRouter from './routes/getProfileData.js';
+import eliminateOpsRouter from './routes/eliminateOpsRouter.js';
 
 
 
@@ -51,8 +53,10 @@ app.use('/api/login', loginRouter)
 app.use('/api/search', searchRouter)
 app.use('/api/logout', logoutRouter)
 app.use('/api/save', saveRouter)
-app.use('/api/eliminate', eliminateUserRouter)
+app.use('/api/eliminate-user', eliminateUserRouter)
+app.use('/api/eliminate-operation', eliminateOpsRouter)
 app.use('/api/data', getDataRouter)
+app.use('/api/profile', profileRouter)
 
 
 
