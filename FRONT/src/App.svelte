@@ -1,5 +1,5 @@
 <script>
-  import { Router, Link, Route } from "svelte-routing"
+  import { Router, Link, Route, navigate } from "svelte-routing"
   import "carbon-components-svelte/css/all.css"
 
   import Home from "./Views/Home.svelte"
@@ -17,8 +17,11 @@
     SideNavItems,
     Theme,
   } from "carbon-components-svelte"
-
-  const handleLogout = () => {}
+  const userID = window.localStorage.getItem("userID")
+  const handleLogout = () => {
+    window.localStorage.removeItem("userID")
+    navigate("/home", { replace: true })
+  }
   let isSideNavOpen = false
 </script>
 
@@ -56,25 +59,27 @@
               >Registrarse</Link
             ></SideNavMenuItem
           >
-          <SideNavMenuItem text="Profile">
-            <Link style="text-decoration:none; color:black" to="/profile"
-              >Perfil</Link
+          {#if userID}
+            <SideNavMenuItem text="Operations">
+              <Link style="text-decoration:none; color:black" to="/ops"
+                >Operaciones</Link
+              ></SideNavMenuItem
             >
-          </SideNavMenuItem>
-          <SideNavMenuItem text="Operations">
-            <Link style="text-decoration:none; color:black" to="/ops"
-              >Operaciones</Link
-            ></SideNavMenuItem
-          >
-          <SideNavMenuItem text="Logout">
-            <Link
-              style="text-decoration:none;color:red"
-              id="menu"
-              to="/home"
-              on:click={handleLogout}>Logout</Link
-            >
-          </SideNavMenuItem></SideNavItems
-        >
+            <SideNavMenuItem text="Profile">
+              <Link style="text-decoration:none; color:black" to="/profile"
+                >Perfil</Link
+              >
+            </SideNavMenuItem>
+            <SideNavMenuItem text="Logout">
+              <Link
+                style="text-decoration:none;color:red"
+                id="menu"
+                to="/home"
+                on:click={handleLogout}>Logout</Link
+              >
+            </SideNavMenuItem>
+          {/if}
+        </SideNavItems>
       </SideNav>
     </Header>
     <Notifications />

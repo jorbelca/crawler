@@ -33,18 +33,20 @@
   }
 
   // SAVE
-  const handleSave = async () => {
+  const handleSave = async (e) => {
+    e.preventDefault()
     if (time == undefined || null) {
       $notification.setErrors(
-        "Por favor seleccione una frecuencia de comprobacion"
+        "Por favor, seleccione una frecuencia de comprobacion"
       )
       return setInterval(() => $notification.removeErrors(), 3000)
     }
     if (initialData == undefined || null) {
-      $notification.setErrors("Por haga una búsqueda válida")
+      $notification.setErrors("Por favor, haga una búsqueda válida")
       return setInterval(() => $notification.removeErrors(), 3000)
     }
     const userID = window.localStorage.getItem("userID")
+
     const response = await saveUrl(
       url,
       selectorClass,
@@ -91,11 +93,7 @@
       <div>
         <br />
 
-        <Form
-          on:submit={(e) => {
-            e.preventDefault()
-            handleSave()
-          }}
+        <Form on:submit={(e) => handleSave(e)}
           ><FormGroup>
             <div class="search-result">
               <Select
@@ -103,7 +101,7 @@
                 labelText="Frecuencia de comprobación"
                 on:change={handleSelect}
               >
-                <SelectItem>Select the duration</SelectItem>
+                <SelectItem disabled>Select the duration</SelectItem>
                 <SelectItem value="1" text="1 hora" />
                 <SelectItem value="2" text="2 horas" />
                 <SelectItem value="5" text="5 horas" />
@@ -158,9 +156,6 @@
       max-width: none;
     }
 
-    p {
-      max-width: none;
-    }
     .search-result {
       flex-direction: column;
       align-items: center;

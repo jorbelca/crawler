@@ -10,19 +10,20 @@
   import { navigate } from "svelte-routing"
 
   import { loginUser } from "../Services/login"
+  import { validateEmail, validatePassword } from "../Helpers/validators.js"
 
   let email = ""
   let password = ""
 
   const handleSubmit = async () => {
-    if (email == "" || undefined || null) {
+    if (!validateEmail(email)) {
       $notification.setErrors(
         "Por favor introduzca una direccion de email válida"
       )
       return setInterval(() => $notification.removeErrors(), 3000)
     }
-    if (password == "" || undefined || null) {
-      $notification.setErrors("Por favor introduzca la contraseña")
+    if (!validatePassword(password)) {
+      $notification.setErrors("Por favor introduzca una contraseña válida")
       return setInterval(() => $notification.removeErrors(), 3000)
     }
     const response = await loginUser(email, password)
@@ -56,6 +57,7 @@
           bind:value={email}
           type="email"
           labelText="Email"
+          autocomplete="true"
         />
 
         <PasswordInput
@@ -64,6 +66,7 @@
           inline
           bind:value={password}
           labelText="Contraseña"
+          autocomplete="true"
         />
 
         <br />

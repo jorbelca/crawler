@@ -1,20 +1,47 @@
 <script>
   import { Button, Content, TextInput } from "carbon-components-svelte"
-
+  import notification from "../State/store.js"
+  import { navigate } from "svelte-routing"
   import { registerUser } from "../Services/register.js"
+  import {
+    validateEmail,
+    validatePassword,
+    validateUsername,
+  } from "../Helpers/validators.js"
 
   let username = ""
   let password = ""
   let email = ""
 
   const handleSubmit = async () => {
+    if (!validateEmail(email)) {
+      $notification.setErrors(
+        "Por favor introduzca una direccion de email válida"
+      )
+      return setInterval(() => $notification.removeErrors(), 3000)
+    }
+    if (!validatePassword(password)) {
+      $notification.setErrors("Por favor introduzca una contraseña válida")
+      return setInterval(() => $notification.removeErrors(), 3000)
+    }
+    if (!validateUsername(username)) {
+      $notification.setErrors(
+        "Por favor introduzca una nombre de usuario válido"
+      )
+      return setInterval(() => $notification.removeErrors(), 3000)
+    }
     const response = await registerUser(email, username, password)
 
     if (response.status === 200) {
+      $notification.setNotifications(response.statusText)
+      setInterval(() => $notification.removeNotifications(), 3000)
       console.log(response.statusText)
+      return navigate("/login", { replace: true })
     }
     if (response.status !== 200) {
       console.log(response)
+      $notification.setErrors(response.statusText)
+      return setInterval(() => $notification.removeErrors(), 3000)
     }
   }
 </script>
@@ -31,6 +58,7 @@
           type="email"
           bind:value={email}
           labelText="Email"
+          autocomplete="true"
         />
       </div>
       <div>
@@ -41,6 +69,7 @@
           type="text"
           bind:value={username}
           labelText="Nombre de Usuario"
+          autocomplete="true"
         />
       </div>
       <div>
@@ -51,6 +80,7 @@
           type="password"
           bind:value={password}
           labelText="Contraseña"
+          autocomplete="true"
         />
       </div>
       <br />
@@ -80,7 +110,7 @@
     margin: 2rem auto;
     max-width: 14rem;
   }
-  
+
   @media (min-width: 480px) {
     h1 {
       max-width: none;

@@ -9,16 +9,42 @@
     TextInput,
   } from "carbon-components-svelte"
   import TrashCan from "carbon-icons-svelte/lib/TrashCan.svelte"
-
+  import { changeProfileData, getProfileData } from "../Services/profileUser.js"
+  import { onMount } from "svelte"
   import { getData } from "../Services/getData.js"
   import notification from "../State/store.js"
+  import {
+    validateEmail,
+    validatePassword,
+    validateUsername,
+  } from "../Helpers/validators.js"
+  import { eliminateUser } from "../Services/eliminateUser.js"
+  import { eliminateOperation } from "../Services/eliminateOperation.js"
+  import { navigate } from "svelte-routing"
+
+  const userID = window.localStorage.getItem("userID")
+
+  let username
+  let email
+  onMount(async () => {
+    const response = await getProfileData(userID)
+    const json = await response.json()
+    if (json) {
+      username = json.username
+      email = json.email
+    }
+    if (response.status !== 200) {
+      $notification.setErrors(response.statusText)
+      return setInterval(() => $notification.removeErrors(), 3000)
+    }
+  })
 
   let data = []
   let dataTable = []
 
   const handleClick = async () => {
     document.getElementById("selector").style.visibility = "visible "
-    const userID = window.localStorage.getItem("userID")
+
     const res = await getData(userID)
     let response = await res.json()
 
@@ -39,16 +65,97 @@
     newPassword = ""
     newEmail = ""
   }
-  const eliminateProfile = () => {
-    if (window.confirm("Estas seguro?")) {
+
+  // ELIMINAR SEGUIMIENTO DEL CRAWLER
+  const eliminateOps = async (id) => {
+    if (
+      window.confirm(
+        "Estas seguro?, Esta acción eliminará los datos de seguimiento permanentemente"
+      )
+    ) {
+      const response = await eliminateOperation(userID, id)
+      const json = await response.json()
+      if (response.status !== 200) {
+        if (json) $notification.setErrors(json.message)
+        $notification.setErrors(response.statusText)
+        return setInterval(() => $notification.removeErrors(), 3000)
+      }
+      if (response.status === 200) {
+        document.getElementById("selector").style.visibility = "hidden "
+
+        dataTable = []
+        $notification.setNotifications(json.message)
+        setInterval(() => $notification.removeNotifications(), 3000)
+        return
+      }
     }
   }
-  const eliminateFollowing = () => {
-    if (window.confirm("Estas seguro?")) {
+
+  // ELIMINAR PERFIL DE USUARIO
+  const eliminateProfile = async () => {
+    if (
+      window.confirm(
+        "Estas seguro?, Esta acción eliminará tu perfil completamente"
+      )
+    ) {
+      const response = await eliminateUser(userID)
+      const json = await response.json()
+
+      if (response.status !== 200) {
+        if (json) $notification.setErrors(json.message)
+        $notification.setErrors(response.statusText)
+        return setInterval(() => $notification.removeErrors(), 3000)
+      }
+      if (response.status === 200) {
+        $notification.setNotifications(json.message)
+        setInterval(() => $notification.removeNotifications(), 3000)
+        return navigate("/home", { replace: true })
+      }
     }
   }
-  const changeProfile = () => {
+  // CAMBIAR DATOS PERSONALES DEL PERFIL
+  const changeProfile = async (e) => {
+    e.preventDefault()
+
+    if (newPassword.length > 0)
+      if (!validatePassword(newPassword)) {
+        $notification.setErrors("Por favor introduzca una contraseña válida")
+        return setInterval(() => $notification.removeErrors(), 3000)
+      }
+    if (newUsername.length > 0)
+      if (!validateUsername(newUsername)) {
+        $notification.setErrors(
+          "Por favor introduzca una nombre de usuario válido"
+        )
+        return setInterval(() => $notification.removeErrors(), 3000)
+      }
+    if (newEmail.length > 0)
+      if (!validateEmail(newEmail)) {
+        $notification.setErrors(
+          "Por favor introduzca una direccion de email válida"
+        )
+        return setInterval(() => $notification.removeErrors(), 3000)
+      }
+    const newData = {
+      username: newUsername || username,
+      email: newEmail || email,
+      password: newPassword || null,
+    }
+    const response = await changeProfileData(newData, userID)
+
+    if (response.status !== 200) {
+      const json = await response.json()
+      $notification.setErrors(json.message)
+      return setInterval(() => $notification.removeErrors(), 3000)
+    }
     resetForm()
+    if (response.status === 200) {
+      username = newData.username
+      email = newData.email
+
+      $notification.setNotifications(response.statusText)
+      return setInterval(() => $notification.removeNotifications(), 3000)
+    }
   }
 </script>
 
@@ -64,16 +171,18 @@
           bind:value={newEmail}
           type="email"
           labelText="Email"
-          placeholder="pass"
+          placeholder={email}
+          autocomplete="true"
         />
         <TextInput
           light
           size="sm"
           inline
           bind:value={newUsername}
-          type="email"
+          type="text"
           labelText="Nombre de Usuario"
-          placeholder="pass"
+          placeholder={username}
+          autocomplete="true"
         />
         <PasswordInput
           light
@@ -81,9 +190,16 @@
           inline
           bind:value={newPassword}
           labelText="Contraseña"
+          autocomplete="true"
         />
         <br />
-        <Button size="small" kind="danger-ghost" type="submit">Cambiar</Button>
+        <Button
+          disabled={!newUsername && !newEmail && !newPassword}
+          id="cambiar"
+          size="small"
+          kind="danger-ghost"
+          type="submit">Cambiar</Button
+        >
 
         <Button
           on:click={resetForm}
@@ -122,7 +238,7 @@
               kind="danger-tertiary"
               iconDescription="Delete"
               icon={TrashCan}
-              on:click={eliminateFollowing}
+              on:click={eliminateOps(dato.id)}
             />
           </div>
         </thead>
