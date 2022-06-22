@@ -16,6 +16,7 @@ import MongoStore from 'connect-mongo'
 import getDataRouter from './routes/getAllData.js';
 import profileRouter from './routes/getProfileData.js';
 import eliminateOpsRouter from './routes/eliminateOpsRouter.js';
+import { cronoScraper, mappingOperations } from './scraper/cronos.js';
 
 
 
@@ -71,4 +72,5 @@ function connectMDB() {
 
 http.createServer(app).listen(PORT, function () {
   console.log('Server listening on port ' + PORT);
+  cronoScraper()
 });

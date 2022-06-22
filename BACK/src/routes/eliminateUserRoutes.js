@@ -9,13 +9,14 @@ eliminateUserRouter.delete('/', async (request, response) => {
   const { userID } = request.body
 
   try {
+
+
     const returnedUser = await User.findByIdAndDelete(userID)
 
     if (returnedUser.length === 0 || !returnedUser || returnedUser === undefined) {
       return response.status(404).json({ error: "No user" })
     }
-
-    const operations = await Operation.deleteOne({ user: userID })
+    const operations = await Operation.deleteMany({ user: userID })
     if (operations.length === 0 || !operations || operations === undefined) {
       return response.status(404).json({ error: "No data of operations" })
     }
