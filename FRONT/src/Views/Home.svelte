@@ -7,7 +7,7 @@
 </svelte:head>
 
 <main>
-  <Content>
+  <Content style="padding:0">
     <h1>Hello and welcome to the small Crawler</h1>
     <h5>
       If you are interested in follow anything on the internet, you are in the

@@ -160,7 +160,7 @@
 </script>
 
 <main>
-  <Content>
+  <Content style="padding:0">
     <h1>Perfil</h1>
     <Form on:submit={changeProfile}>
       <FormGroup legendText="Datos Personales">

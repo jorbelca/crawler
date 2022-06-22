@@ -67,7 +67,7 @@
 </script>
 
 <main>
-  <Content>
+  <Content style="padding:0">
     <h1>Operaciones</h1>
 
     <form on:submit|preventDefault={handleSubmit}>
@@ -126,7 +126,7 @@
 
   main {
     text-align: center;
-    padding: 1rem;
+
     margin: 0 auto;
   }
 
