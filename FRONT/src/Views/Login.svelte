@@ -5,6 +5,7 @@
     PasswordInput,
     FormGroup,
     Content,
+    Modal,
   } from "carbon-components-svelte"
   import notification from "../State/store.js"
   import { navigate } from "svelte-routing"
@@ -42,10 +43,11 @@
       return setInterval(() => $notification.removeErrors(), 3000)
     }
   }
+  let open = false
 </script>
 
 <main>
-  <Content>
+  <Content style="padding:0">
     <h1>Login</h1>
 
     <form on:submit|preventDefault={handleSubmit}>
@@ -84,7 +86,7 @@
 
   main {
     text-align: center;
-    padding: 1em;
+    padding: 0;
     margin: 0 auto;
   }
 

@@ -6,8 +6,6 @@
 
 <main>
   {#if $notification.notifications.length > 0}
-    <br />
-    <br />
     <InlineNotification
       lowContrast
       kind="success"

@@ -47,7 +47,7 @@
 </script>
 
 <main>
-  <Content>
+  <Content style="padding:0">
     <h1>Registrarse</h1>
     <form on:submit|preventDefault={handleSubmit}>
       <div>
