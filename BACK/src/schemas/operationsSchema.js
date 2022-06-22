@@ -5,6 +5,7 @@ const operationSchema = new mongoose.Schema({
   url: { type: String, required: true },
   selector: { type: String, required: true },
   data: { type: [], required: true },
+  time: { type: Number, required: true },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

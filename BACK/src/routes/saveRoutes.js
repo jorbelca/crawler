@@ -11,7 +11,8 @@ const saveRouter = express.Router()
 
 saveRouter.post('/', async (request, response) => {
   const { url, selector, time, initialData, userID } = request.body
-  console.log(userID);
+
+  if (userID == null || undefined) { return response.status(400).send('No user identified') }
   const entryAlreadyInDB = await Operation.find({ url: url, selector: selector, user: userID })
 
   if (entryAlreadyInDB.length > 0) {
@@ -50,49 +51,8 @@ saveRouter.post('/', async (request, response) => {
 
 
 
-
-
-
-  // setInterval(async () => {
-  //   response = await urlData(url, selector)
-  //   console.log(response);
-  //   if (response !== initialData) sendNotification(mailOptions)
-  //   const mailOptions = {
-  //     from: 'crawlerJS@hotmail.com',
-  //     to: 'jordi_belda@hotmail.com',
-  //     subject: 'Sending Email using Node.js',
-  //     html: `<h1>Welcome</h1><p>${url}</p> <br><p>The data is ${response}</p>`
-  //   };
-  // }, 10000);
-
-
-
-  // MAL
-  // const operation = await User.findById(userID)
-  //   const data = {
-  //     url, selector, time, data: [{
-  //       date: date,
-  //       data: initialData
-  //     }]
-  // }
-  //   user.operations = data
-  // console.log(user.operations[0].data);
-  // user.operations[0].data = user.operations[0].data, {
-  //   date: date,
-  //   data: initialData
-  // }
-
-
-  // if (user) await user.save()
-
-
-
 });
 
 export default saveRouter
 
 
-  // const meals = await Entry.find({ user: userID }).populate("user", { username: 1 })
-
-
-  // response.status(200).json(meals)
