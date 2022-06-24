@@ -10,12 +10,11 @@
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
-    "carbon-components-svelte": "^0.66.0",
-    "carbon-icons-svelte": "^11.1.0",
     "svelte": "^3.48.0",
     "vite": "^2.9.9"
   },
   "dependencies": {
+    "spectre.css": "^0.5.9",
     "svelte-routing": "^1.6.0",
     "zustand": "^4.0.0-rc.1"
   }

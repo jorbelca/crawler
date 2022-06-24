@@ -1,12 +1,4 @@
 <script>
-  import {
-    TextInput,
-    Button,
-    PasswordInput,
-    FormGroup,
-    Content,
-    Modal,
-  } from "carbon-components-svelte"
   import notification from "../State/store.js"
   import { navigate } from "svelte-routing"
 
@@ -33,7 +25,7 @@
     if (response.status === 200) {
       $notification.setNotifications(response.statusText)
       setInterval(() => $notification.removeNotifications(), 3000)
-      document.cookie = response.cookie
+
       window.localStorage.setItem("userID", res)
 
       return navigate("/ops", { replace: true })
@@ -43,39 +35,43 @@
       return setInterval(() => $notification.removeErrors(), 3000)
     }
   }
-  let open = false
 </script>
 
 <main>
-  <Content style="padding:0">
-    <h1>Login</h1>
+  <h1>Login</h1>
 
-    <form on:submit|preventDefault={handleSubmit}>
-      <FormGroup>
-        <TextInput
-          light
-          size="sm"
-          inline
+  <form class="form-horizontal" on:submit|preventDefault={handleSubmit}>
+    <div class="form-group">
+      <div class="col-3 col-sm-12">
+        <label class="form-label label-sm " for="email">Email</label>
+      </div>
+      <div class="col-9 col-sm-12">
+        <input
+          id="email"
+          class="form-input input-sm"
           bind:value={email}
           type="email"
-          labelText="Email"
           autocomplete="true"
         />
-
-        <PasswordInput
-          light
-          size="sm"
-          inline
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-3 col-sm-12">
+        <label class="form-label label-sm " for="pass">Contraseña</label>
+      </div>
+      <div class="col-9 col-sm-12">
+        <input
+          id="pass"
+          class="form-input input-sm"
           bind:value={password}
-          labelText="Contraseña"
           autocomplete="true"
+          type="password"
         />
-
-        <br />
-        <Button kind="secondary" type="tertiary">Log In</Button>
-      </FormGroup>
-    </form>
-  </Content>
+      </div>
+    </div>
+    <br />
+    <button>Log In &nbsp<i class="fa-solid fa-arrow-right" /></button>
+  </form>
 </main>
 
 <style>
@@ -96,7 +92,7 @@
     font-size: 2rem;
     font-weight: 150;
     line-height: 1.1;
-    margin: 2rem auto;
+    margin: 1rem auto;
     max-width: 14rem;
   }
 

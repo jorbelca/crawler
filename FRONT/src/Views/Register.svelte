@@ -1,5 +1,4 @@
 <script>
-  import { Button, Content, TextInput } from "carbon-components-svelte"
   import notification from "../State/store.js"
   import { navigate } from "svelte-routing"
   import { registerUser } from "../Services/register.js"
@@ -47,46 +46,55 @@
 </script>
 
 <main>
-  <Content style="padding:0">
-    <h1>Registrarse</h1>
-    <form on:submit|preventDefault={handleSubmit}>
-      <div>
-        <TextInput
-          light
-          inline
-          id="registerEmail"
-          type="email"
+  <h1>Registro</h1>
+  <form class="form-horizontal" on:submit|preventDefault={handleSubmit}>
+    <div class="form-group">
+      <div class="col-3 col-sm-12">
+        <label class="form-label label-sm " for="email">Email</label>
+      </div>
+      <div class="col-9 col-sm-12">
+        <input
+          id="email"
+          class="form-input input-sm"
           bind:value={email}
-          labelText="Email"
+          type="email"
           autocomplete="true"
         />
       </div>
-      <div>
-        <TextInput
-          light
-          inline
-          id="registerUsername"
-          type="text"
+    </div>
+    <div class="form-group">
+      <div class="col-3 col-sm-12">
+        <label class="form-label label-sm " for="username"
+          >Nombre de usuario</label
+        >
+      </div>
+      <div class="col-9 col-sm-12">
+        <input
+          id="username"
+          class="form-input input-sm"
           bind:value={username}
-          labelText="Nombre de Usuario"
+          type="text"
           autocomplete="true"
         />
       </div>
-      <div>
-        <TextInput
-          light
-          inline
-          id="registerPassword"
-          type="password"
+    </div>
+    <div class="form-group">
+      <div class="col-3 col-sm-12">
+        <label class="form-label label-sm " for="pass">Contraseña</label>
+      </div>
+      <div class="col-9 col-sm-12">
+        <input
+          id="pass"
+          class="form-input input-sm"
           bind:value={password}
-          labelText="Contraseña"
           autocomplete="true"
         />
       </div>
-      <br />
-      <Button kind="secondary" type="submit">Registrarse</Button>
-    </form>
-  </Content>
+    </div>
+    <br />
+    <button type="submit">Registrarse</button>
+    <button disabled>Cancelar</button>
+  </form>
 </main>
 
 <style>
@@ -97,7 +105,7 @@
 
   main {
     text-align: center;
-    padding: 1rem;
+    padding: 0rem;
     margin: 0 auto;
   }
 
@@ -107,7 +115,7 @@
     font-size: 2rem;
     font-weight: 150;
     line-height: 1.1;
-    margin: 2rem auto;
+    margin: 1rem auto;
     max-width: 14rem;
   }
 
