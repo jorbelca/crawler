@@ -1,14 +1,4 @@
 <script>
-  import {
-    Button,
-    Content,
-    Form,
-    FormGroup,
-    PasswordInput,
-    Table,
-    TextInput,
-  } from "carbon-components-svelte"
-  import TrashCan from "carbon-icons-svelte/lib/TrashCan.svelte"
   import { changeProfileData, getProfileData } from "../Services/profileUser.js"
   import { onMount } from "svelte"
   import { getData } from "../Services/getData.js"
@@ -21,6 +11,7 @@
   import { eliminateUser } from "../Services/eliminateUser.js"
   import { eliminateOperation } from "../Services/eliminateOperation.js"
   import { navigate } from "svelte-routing"
+  import { changeTime } from "../Services/changeTime.js"
 
   const userID = window.localStorage.getItem("userID")
 
@@ -157,106 +148,206 @@
       return setInterval(() => $notification.removeNotifications(), 3000)
     }
   }
+
+  // CAMBIAR DURACION DE LA COMPROBACION DEL CRAWLER
+  const handleChangeTime = async (id) => {
+    open = false
+
+    const response = await changeTime(userID, newTime, id)
+
+    if (response.status !== 200) {
+      $notification.setErrors(response.statusText)
+      return setInterval(() => $notification.removeErrors(), 3000)
+    }
+    if (response.status === 200) {
+      $notification.setNotifications(response.statusText)
+      setInterval(() => $notification.removeNotifications(), 3000)
+      location.reload()
+    }
+  }
+  const handleSelect = (e) => {
+    newTime = e.detail
+  }
+  let open = false
+  let newTime
 </script>
 
 <main>
-  <Content style="padding:0">
-    <h1>Perfil</h1>
-    <Form on:submit={changeProfile}>
-      <FormGroup legendText="Datos Personales">
-        <TextInput
-          light
-          size="sm"
-          inline
-          bind:value={newEmail}
-          type="email"
-          labelText="Email"
-          placeholder={email}
-          autocomplete="true"
-        />
-        <TextInput
-          light
-          size="sm"
-          inline
-          bind:value={newUsername}
-          type="text"
-          labelText="Nombre de Usuario"
-          placeholder={username}
-          autocomplete="true"
-        />
-        <PasswordInput
-          light
-          size="sm"
-          inline
-          bind:value={newPassword}
-          labelText="Contraseña"
-          autocomplete="true"
-        />
-        <br />
-        <Button
-          disabled={!newUsername && !newEmail && !newPassword}
-          id="cambiar"
-          size="small"
-          kind="danger-ghost"
-          type="submit">Cambiar</Button
-        >
-
-        <Button
-          on:click={resetForm}
-          style={"color:grey"}
-          size="small"
-          kind="ghost">Cancelar</Button
-        >
-
-        <Button on:click={eliminateProfile} size="small" kind="danger"
-          >Eliminar Cuenta</Button
-        >
-      </FormGroup>
-    </Form>
-    <div class="btn-select">
-      <Button size="small" kind="secondary" on:click={handleClick}
-        >CARGAR DATOS DE OPERACIONES</Button
-      >
-
-      <select id="selector" bind:value={dataTable}
-        >{#each data as dato (dato.id)}
-          <option value={[dato]}>{dato.url.substring(0, 50) + "..."}</option>
-        {:else}
-          <option value={""}>{"NO DATA"}</option>
-        {/each}
-      </select>
-    </div>
-    {#each dataTable as dato (dato.id)}
-      <Table size="compact">
-        <thead>
-          <div class="table-head">
-            URL <a href={dato.url} target="_blank"
-              >{dato.url.substring(0, 50) + "..."}</a
-            >
-            <Button
-              size="small"
-              kind="danger-tertiary"
-              iconDescription="Delete"
-              icon={TrashCan}
-              on:click={eliminateOps(dato.id)}
+  <h1>Perfil</h1>
+  <div class="form-flex">
+    <form class="form-horizontal" on:submit={changeProfile}>
+      <div class="form-form">
+        <div class="form-group">
+          <div class="col-3 col-sm-12">
+            <label class="form-label label-sm " for="email">Email</label>
+          </div>
+          <div class="col-9 col-sm-12">
+            <input
+              id="email"
+              class="form-input input-sm"
+              bind:value={newEmail}
+              type="email"
+              placeholder={email}
+              autocomplete="true"
             />
           </div>
-        </thead>
-        {#each dato.data as operation}
-          <tbody>
-            <tr>
-              <td>
-                {operation.date}
-              </td>
-              <td>
-                {operation.data}
-              </td>
-            </tr>
-          </tbody>
-        {/each} <br />
-      </Table>
-    {/each}
-  </Content>
+        </div>
+
+        <div class="form-group">
+          <div class="col-3 col-sm-12">
+            <label class="form-label label-sm" for="username"
+              >Nombre de Usuario</label
+            >
+          </div>
+          <div class="col-9 col-sm-12">
+            <input
+              id="username"
+              class="form-input input-sm"
+              bind:value={newUsername}
+              type="text"
+              placeholder={username}
+              autocomplete="true"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-3 col-sm-12">
+            <label class="form-label label-sm" for="pass">Contraseña</label>
+          </div>
+          <div class="col-9 col-sm-12">
+            <input
+              type="password"
+              id="pass"
+              class="form-input input-sm"
+              bind:value={newPassword}
+              autocomplete="true"
+            />
+          </div>
+        </div>
+      </div>
+      <br />
+      <div class="form-group">
+        <div class="form-btns">
+          <button
+            class="btn btn-sm"
+            disabled={!newUsername && !newEmail && !newPassword}
+            id="cambiar"
+            type="submit">Cambiar</button
+          >
+
+          <button class="btn btn-sm" on:click={resetForm} style={"color:grey"}
+            >Cancelar</button
+          >
+          <button class="btn btn-error btn-sm" on:click={eliminateProfile}
+            >Eliminar Cuenta</button
+          >
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="btn-select">
+    <button class="btn btn-sm" on:click={handleClick} id="btn-carga"
+      >CARGAR DATOS DE OPERACIONES
+    </button>
+
+    <select id="selector" bind:value={dataTable}
+      >{#each data as dato (dato.id)}
+        <option value={[dato]}>{dato.url.substring(0, 50) + "..."}</option>
+      {:else}
+        <option value={""}>{"NO DATA"}</option>
+      {/each}
+    </select>
+  </div>
+  {#each dataTable as dato (dato.id)}
+    <div class="table-head">
+      <a style="padding-bottom:6px" href={dato.url} target="_blank"
+        >{dato.url.substring(0, 50) + "..."}</a
+      >
+      <select
+        on:change={() => {
+          open = true
+        }}
+      >
+        <option disabled value={dato.time}
+          >Comprueba cada {dato.time} horas</option
+        >
+        <option>Cambiar duración</option>
+      </select>
+      <button
+        class="btn  btn-error btn-sm"
+        iconDescription="Eliminar registro y operación del servidor"
+        on:click|preventDefault={eliminateOps(dato.id)}
+        ><i class="fa-solid fa-trash-can" /></button
+      >
+
+      <div class="modal " id="modal-id">
+        <div class="modal-container">
+          <div class="modal-header">
+            <a
+              href="#close"
+              class="btn btn-clear float-right"
+              aria-label="Close"
+            />
+            <div class="modal-title h5">
+              Seleccionar nueva frecuencia de comprobación
+            </div>
+          </div>
+          <div class="modal-body">
+            <div class="content">
+              <label for="Duracion" />
+              <div id="guardar">
+                <form
+                  class="form-horizontal"
+                  on:submit|preventDefault={handleChangeTime(dato.id)}
+                >
+                  <div class="search-result">
+                    <div class="form-group">
+                      <div class="col-6 col-sm-12">
+                        <select id="select-frecuency" bind:value={newTime}>
+                          <option value="1">1 hora</option>
+                          <option value="2">2 horas</option>
+                          <option value="5">5 horas</option>
+                          <option value="16">16 horas</option>
+                          <option value="24">24 horas</option>
+                        </select>
+                        <button class="guardar-btn btn" type="submit"
+                          >Guardar</button
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <br />
+    <table class="table ">
+      <thead>
+        <tr>
+          <th>Fecha // Hora</th>
+          <th>Valor</th>
+        </tr>
+      </thead>
+      {#each dato.data as operation}
+        <tbody>
+          <tr class="active">
+            <td>
+              {operation.date.split("T").join(" // ")}
+            </td>
+            <td>
+              {operation.data}
+            </td>
+          </tr>
+        </tbody>
+      {/each}
+      <br />
+    </table>
+  {/each}
 </main>
 
 <style>
@@ -265,25 +356,35 @@
       Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   }
 
-  main {
-    text-align: center;
-    padding: 1rem;
-    margin: 0 auto;
-  }
-
   h1 {
     color: goldenrod;
     text-transform: uppercase;
     font-size: 2rem;
     font-weight: 150;
     line-height: 1.1;
-    margin: 2rem auto;
+    margin: 1rem auto;
     max-width: 14rem;
+  }
+  .form-flex {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+  .form-form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .form-btns {
+    display: flex;
+    flex-direction: column;
+    flex: 6;
   }
   .btn-select {
     display: flex;
-    align-content: center;
+    flex-direction: row;
     justify-content: center;
+    width: 100%;
     margin-bottom: 20px;
   }
   #selector {
@@ -291,13 +392,16 @@
   }
   .table-head {
     display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+    align-items: flex-end;
   }
 
-  @media (max-width: 580px) {
+  @media (max-width: 770px) {
     h1 {
       max-width: none;
+    }
+    #btn-carga {
+      display: flex;
+      align-self: center;
     }
     .btn-select {
       display: flex;

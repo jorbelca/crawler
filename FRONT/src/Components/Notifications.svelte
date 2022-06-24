@@ -1,27 +1,19 @@
 <script>
-  import { InlineNotification } from "carbon-components-svelte"
-
   import notification from "../State/store.js"
 </script>
 
 <main>
   {#if $notification.notifications.length > 0}
-    <InlineNotification
-      lowContrast
-      kind="success"
-      title="Success:"
-      subtitle={$notification.notifications}
-    />
+    <div class="toast toast-success">
+      {$notification.notifications}
+    </div>
   {/if}
 
   {#if $notification.errors.length > 0}
     <br />
     <br />
-    <InlineNotification
-      lowContrast
-      kind="error"
-      title="Error:"
-      subtitle={$notification.errors}
-    />
+    <div class="toast toast-error">
+      <button class="btn btn-clear float-right" />{$notification.errors}
+    </div>
   {/if}
 </main>

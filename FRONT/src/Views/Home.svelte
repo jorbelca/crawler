@@ -1,5 +1,4 @@
 <script>
-  import { Content } from "carbon-components-svelte"
 </script>
 
 <svelte:head>
@@ -7,15 +6,13 @@
 </svelte:head>
 
 <main>
-  <Content style="padding:0">
-    <h1>Hello and welcome to the small Crawler</h1>
-    <h5>
-      If you are interested in follow anything on the internet, you are in the
-      correct spot
-    </h5>
+  <h1>Hello, and welcome to the small Crawler</h1>
+  <h5>
+    If you are interested in following anything on the internet, you are in the
+    correct spot
+  </h5>
 
-    <a href="/about">About my site</a></Content
-  >
+  <a href="/about">About my site</a>
 </main>
 
 <style>
@@ -26,7 +23,7 @@
     font-size: 2rem;
     font-weight: 150;
     line-height: 1.1;
-    margin: 2rem auto;
+    margin: 0.3rem auto;
     max-width: 14rem;
     color: goldenrod;
   }
