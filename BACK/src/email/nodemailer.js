@@ -1,12 +1,17 @@
 import nodemailer from 'nodemailer';
+import { MAIL_CLIENT_ID, MAIL_CLIENT_SECRET, MAIL_PASSWORD, MAIL_REFRESH_TOKEN, MAIL_USERNAME } from '../../configEnv.js';
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp.office365.com',
-  port: '587',
-  auth: { user: 'crawlerJS@hotmail.com', pass: 'crawler2022' },
+  service: 'gmail',
+  auth: {
+    type: 'OAuth2',
+    user: MAIL_USERNAME,
+    pass: MAIL_PASSWORD,
+    clientId: MAIL_CLIENT_ID,
+    clientSecret: MAIL_CLIENT_SECRET,
+    refreshToken: MAIL_REFRESH_TOKEN
+  },
   secureConnection: false,
-  tls: { ciphers: 'SSLv3' }
-
 });
 
 

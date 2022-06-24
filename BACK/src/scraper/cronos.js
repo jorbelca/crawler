@@ -14,12 +14,14 @@ export const mappingOperations = async () => {
     const Op = operations[l]
     const lastData = Op.data[Op.data.length - 1]
     const time = Op.time
-    const lastTime = lastData.date.substring(12)
-    const nextTime = JSON.stringify(Number(lastTime.substring(0, 2)) + time) + lastTime.substring(2, 8)
-    const actualTime = getTime().substring(12)
+
+    const currentTime = new Date(getTime())
+    const lastTime = new Date(lastData.date)
+    const nextTime = lastTime.setHours(lastTime.getHours() + time)
+
 
     // COMPARACIÓN DE SI LA HORA QUE ESTA EN LA BBD ES MENOR A LA ACTUAL Y EJECUCION DEL SCRAPPING  
-    if (nextTime <= actualTime) {
+    if (nextTime < currentTime.getTime()) {
       const data = await urlData(Op.url, Op.selector)
       try {
         await Operation.updateOne({ selector: Op.selector, user: Op.user, url: Op.url },
@@ -30,37 +32,33 @@ export const mappingOperations = async () => {
 
       // SI LOS DATOS ESCRAPEADOS CAMBIAN QUE ENVIE UN EMAIL
       if (data !== lastData.data) {
-        const email = await User.findById(Op.user, 'email').exec()
-        sendNotification(mailOptions)
+        const emailDB = await User.findById(Op.user).select({ email: 1, _id: 0 })
+        const { email } = emailDB
         const mailOptions = {
-          from: 'crawlerJS@hotmail.com',
+          from: 'crawlerj6@gmail.com',
           to: `${email}`,
           subject: 'New Data',
           html: `<h1>Hi!</h1><p>The Crawler has found new data in the page ${Op.url}.</p> <br><p>The new data is ${data}</p>`
         }
+        sendNotification(mailOptions)
       }
-
-
-      // console.log(Op.url, Op.selector, Op.user);
-      console.log(time, lastTime, nextTime, actualTime);
-
-
     }
+
+
+
+    console.log(lastTime, time, nextTime / 1000 / 60, currentTime, (nextTime - currentTime.getTime()) / 1000 / 60);
+
   }
 }
 
 
 
 
-export const cronoScraper = async () => {
-
-  setInterval(async () => {
-
+export const cronoScraper = () => {
+  const fiveMinutes = 1000 * 60 * 5
+  setInterval(() => {
     mappingOperations()
-  }, 100000)
-
-
-
+  }, `${fiveMinutes}`)
 }
 
 

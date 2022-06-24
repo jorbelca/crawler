@@ -1,10 +1,11 @@
 import express from 'express'
+import { auth } from '../utils/auth.js';
 
 const logoutRouter = express.Router()
 
-logoutRouter.post('/', async (request, response) => {
-  req.session.destroy();
-  res.redirect('/');
+logoutRouter.get('/',  async (request, response) => {
+  request.session.destroy();
+  response.redirect('/');
 })
 
 export default logoutRouter

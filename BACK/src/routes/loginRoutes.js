@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 import User from '../schemas/userSchema.js'
 
 
+
 const loginRouter = express.Router()
 
 loginRouter.post('/', async (request, response) => {
@@ -19,12 +20,12 @@ loginRouter.post('/', async (request, response) => {
   const passwordCorrect = user === null ? false : await bcrypt.compare(password, user.password)
 
 
-  let session
+
   if (email == user.email && passwordCorrect) {
-    session = request.session;
-    session.userID = JSON.stringify(user._id);
-  }
-  else {
+    request.session.user = JSON.stringify(user._id);
+    request.session.save()
+  } else {
+
     return response.status(401).json('Error:Invalid username or password');
   }
 
