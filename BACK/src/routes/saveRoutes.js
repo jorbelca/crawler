@@ -1,7 +1,4 @@
 import express from 'express'
-import { urlData } from "../scraper/indexScraper.js";
-import { sendNotification } from '../email/nodemailer.js'
-
 import Operation from '../schemas/operationsSchema.js';
 import User from '../schemas/userSchema.js'
 import getTime from '../utils/getTime.js';
