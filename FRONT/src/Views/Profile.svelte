@@ -13,12 +13,10 @@
   import { navigate } from "svelte-routing"
   import { changeTime } from "../Services/changeTime.js"
 
-  const userID = window.localStorage.getItem("userID")
-
   let username
   let email
   onMount(async () => {
-    const response = await getProfileData(userID)
+    const response = await getProfileData()
     const json = await response.json()
     if (json) {
       username = json.username
@@ -36,7 +34,7 @@
   const handleClick = async () => {
     document.getElementById("selector").style.visibility = "visible "
 
-    const res = await getData(userID)
+    const res = await getData()
     let response = await res.json()
 
     if (response !== undefined || response.length > 0 || response !== null)
@@ -64,7 +62,7 @@
         "Estas seguro?, Esta acción eliminará los datos de seguimiento permanentemente"
       )
     ) {
-      const response = await eliminateOperation(userID, id)
+      const response = await eliminateOperation(id)
       const json = await response.json()
       if (response.status !== 200) {
         if (json) $notification.setErrors(json.message)
@@ -89,7 +87,7 @@
         "Estas seguro?, Esta acción eliminará tu perfil completamente"
       )
     ) {
-      const response = await eliminateUser(userID)
+      const response = await eliminateUser()
       const json = await response.json()
 
       if (response.status !== 200) {
@@ -105,55 +103,52 @@
     }
   }
   // CAMBIAR DATOS PERSONALES DEL PERFIL
-  const changeProfile = async (e) => {
-    e.preventDefault()
-
-    if (newPassword.length > 0)
-      if (!validatePassword(newPassword)) {
-        $notification.setErrors("Por favor introduzca una contraseña válida")
-        return setInterval(() => $notification.removeErrors(), 3000)
-      }
-    if (newUsername.length > 0)
-      if (!validateUsername(newUsername)) {
-        $notification.setErrors(
-          "Por favor introduzca una nombre de usuario válido"
-        )
-        return setInterval(() => $notification.removeErrors(), 3000)
-      }
-    if (newEmail.length > 0)
-      if (!validateEmail(newEmail)) {
-        $notification.setErrors(
-          "Por favor introduzca una direccion de email válida"
-        )
-        return setInterval(() => $notification.removeErrors(), 3000)
-      }
+  const changeProfile = async () => {
     const newData = {
       username: newUsername || username,
       email: newEmail || email,
       password: newPassword || null,
     }
-    const response = await changeProfileData(newData, userID)
+    if (newData.password !== null) {
+      if (!validatePassword(newData.password)) {
+        return $notification.setErrors(
+          "Por favor introduzca una contraseña válida"
+        )
+      }
+    }
+
+    if (!validateUsername(newData.username)) {
+      return $notification.setErrors(
+        "Por favor introduzca una nombre de usuario válido"
+      )
+    }
+
+    if (!validateEmail(newData.email)) {
+      return $notification.setErrors(
+        "Por favor introduzca una direccion de email válida"
+      )
+    }
+
+    const response = await changeProfileData(newData)
 
     if (response.status !== 200) {
       const json = await response.json()
-      $notification.setErrors(json.message)
-      return setInterval(() => $notification.removeErrors(), 3000)
+      return $notification.setErrors(json.message)
     }
     resetForm()
     if (response.status === 200) {
       username = newData.username
       email = newData.email
 
-      $notification.setNotifications(response.statusText)
-      return setInterval(() => $notification.removeNotifications(), 3000)
+      return $notification.setNotifications(response.statusText)
     }
   }
 
   // CAMBIAR DURACION DE LA COMPROBACION DEL CRAWLER
   const handleChangeTime = async (id) => {
-    open = false
+    openModal = false
 
-    const response = await changeTime(userID, newTime, id)
+    const response = await changeTime(newTime, id)
 
     if (response.status !== 200) {
       $notification.setErrors(response.statusText)
@@ -168,7 +163,7 @@
   const handleSelect = (e) => {
     newTime = e.detail
   }
-  let open = false
+  let openModal = false
   let newTime
 </script>
 
@@ -226,21 +221,25 @@
           </div>
         </div>
       </div>
-      <br />
+
       <div class="form-group">
         <div class="form-btns">
           <button
             class="btn btn-sm"
             disabled={!newUsername && !newEmail && !newPassword}
             id="cambiar"
-            type="submit">Cambiar</button
+            type="submit"
+            on:click|preventDefault={changeProfile}>Cambiar</button
           >
 
-          <button class="btn btn-sm" on:click={resetForm} style={"color:grey"}
-            >Cancelar</button
+          <button
+            class="btn btn-sm"
+            on:click|preventDefault={resetForm}
+            style={"color:grey"}>Cancelar</button
           >
-          <button class="btn btn-error btn-sm" on:click={eliminateProfile}
-            >Eliminar Cuenta</button
+          <button
+            class="btn btn-error btn-sm"
+            on:click|preventDefault={eliminateProfile}>Eliminar Cuenta</button
           >
         </div>
       </div>
@@ -266,11 +265,13 @@
       >
       <select
         on:change={() => {
-          open = true
+          document.getElementById("modal-id").style.visibility = "visible"
+          openModal = true
         }}
       >
-        <option disabled value={dato.time}
-          >Comprueba cada {dato.time} horas</option
+        <option default
+          >Actualmente, se comprueba cada {dato.time}
+          {dato.time > 1 ? "horas" : "hora"}</option
         >
         <option>Cambiar duración</option>
       </select>
@@ -281,11 +282,12 @@
         ><i class="fa-solid fa-trash-can" /></button
       >
 
-      <div class="modal " id="modal-id">
+      <!-- MODAL CAMBIO DE FRECUENCIA -->
+      <div class={openModal == true ? "modal active" : "modal"} id="modal-id">
         <div class="modal-container">
           <div class="modal-header">
             <a
-              href="#close"
+              on:click={() => (openModal = false)}
               class="btn btn-clear float-right"
               aria-label="Close"
             />
@@ -365,36 +367,39 @@
     margin: 1rem auto;
     max-width: 14rem;
   }
-  .form-flex {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-  }
+
   .form-form {
     display: flex;
     flex-direction: column;
-    flex: 1;
+    align-items: stretch;
+  }
+  .form-group {
+    justify-content: center;
   }
   .form-btns {
     display: flex;
-    flex-direction: column;
-    flex: 6;
-  }
-  .btn-select {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    width: 100%;
+    margin-top: 20px;
     margin-bottom: 20px;
+  }
+  .btn-sm {
+    margin: 5px;
   }
   #selector {
     visibility: hidden;
   }
+  .btn-select {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+  }
   .table-head {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
+    justify-content: space-evenly;
   }
-
+  #modal-id {
+    visibility: hidden;
+  }
   @media (max-width: 770px) {
     h1 {
       max-width: none;
@@ -406,9 +411,26 @@
     .btn-select {
       display: flex;
       flex-direction: column;
-      align-content: center;
+      align-items: center;
       justify-content: center;
       margin-bottom: 20px;
+    }
+    .btn-select > select {
+      margin-left: 10px;
+      margin-right: 10px;
+      max-width: 95%;
+    }
+    .table-head {
+      flex-direction: column;
+      justify-items: center;
+      align-items: center;
+    }
+  }
+  @media (max-width: 400px) {
+    .table-head {
+      flex-direction: column;
+      justify-items: center;
+      align-items: stretch;
     }
   }
 </style>

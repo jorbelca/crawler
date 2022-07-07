@@ -1,14 +1,17 @@
-const apiUrl = "http://localhost:3030/api"
+import { tokenSetter } from "../Helpers/tokenSetter";
+import { apiUrl } from "./register";
 
-export const eliminateOperation = async (userID, id) => {
+
+
+export const eliminateOperation = async (id) => {
   try {
-    const response = await fetch(`${apiUrl}/eliminate-operation/${id}`, {
+    const response = await fetch(`${apiUrl}/api/eliminate-operation/${id}`, {
       method: "DELETE",
       mode: "cors",
-      body: JSON.stringify({ userID: userID }),
       headers: {
         "Content-Type": "application/json; charset=UTF-8 ",
         Accept: "application/json",
+        Authorization: tokenSetter()
       },
     })
     return response

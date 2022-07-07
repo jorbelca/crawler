@@ -1,8 +1,9 @@
-const apiUrl = "http://localhost:3030/api"
+import { apiUrl } from "./register";
+
 
 export const loginUser = async (email, password) => {
   try {
-    const response = await fetch(`${apiUrl}/login`, {
+    const response = await fetch(`${apiUrl}/api/login`, {
       method: "POST",
       mode: "cors",
       body: JSON.stringify({ email: email, password: password }),
@@ -10,6 +11,7 @@ export const loginUser = async (email, password) => {
         "Content-Type": "application/json; charset=UTF-8 ",
         Accept: "application/json",
       },
+      credentials: 'include'
     })
     return response
   } catch (error) {

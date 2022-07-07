@@ -1,14 +1,17 @@
-const apiUrl = "http://localhost:3030/api"
+import { tokenSetter } from "../Helpers/tokenSetter";
+import { apiUrl } from "./register";
 
-export const getProfileData = async (userID) => {
+
+
+export const getProfileData = async () => {
   try {
-    const response = await fetch(`${apiUrl}/profile`, {
+    const response = await fetch(`${apiUrl}/api/profile`, {
       method: "POST",
       mode: "cors",
-      body: JSON.stringify({ userID: userID }),
       headers: {
         "Content-Type": "application/json; charset=UTF-8 ",
         Accept: "application/json",
+        Authorization: tokenSetter()
       },
     })
     return response
@@ -19,15 +22,16 @@ export const getProfileData = async (userID) => {
 
 }
 
-export const changeProfileData = async (newData, userID) => {
+export const changeProfileData = async (newData) => {
   try {
-    const response = await fetch(`${apiUrl}/profile`, {
+    const response = await fetch(`${apiUrl}/api/profile`, {
       method: "PUT",
       mode: "cors",
-      body: JSON.stringify({ newData: newData, userID: userID }),
+      body: JSON.stringify({ newData: newData }),
       headers: {
         "Content-Type": "application/json; charset=UTF-8 ",
         Accept: "application/json",
+        Authorization: tokenSetter()
       },
     })
     return response

@@ -35,14 +35,12 @@
       $notification.setErrors("Por favor, haga una búsqueda válida")
       return setInterval(() => $notification.removeErrors(), 3000)
     }
-    const userID = window.localStorage.getItem("userID")
 
     const response = await saveUrl(
       url,
       selectorClass,
       Number(time),
-      initialData,
-      userID
+      initialData
     )
 
     if (response.status === 200) {

@@ -1,9 +1,9 @@
-const apiUrl = "http://localhost:3030/api"
+export const apiUrl = "http://localhost:3030" || ""
 
 export const registerUser = async (email, username, password) => {
 
   try {
-    const response = await fetch(`${apiUrl}/register`, {
+    const response = await fetch(`${apiUrl}/api/register`, {
       method: "POST",
       mode: "cors",
       body: JSON.stringify({ username: username, email: email, password: password }),
