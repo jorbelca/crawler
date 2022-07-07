@@ -13,26 +13,29 @@
       $notification.setErrors(
         "Por favor introduzca una direccion de email válida"
       )
-      return setInterval(() => $notification.removeErrors(), 3000)
     }
     if (!validatePassword(password)) {
       $notification.setErrors("Por favor introduzca una contraseña válida")
-      return setInterval(() => $notification.removeErrors(), 3000)
     }
-    const response = await loginUser(email, password)
-    const res = await response.json()
+    let response
+    let res
+    try {
+      response = await loginUser(email, password)
+      res = await response.json()
+    } catch (error) {
+      console.error(error)
+    }
+
 
     if (response.status === 200) {
       $notification.setNotifications(response.statusText)
-      setInterval(() => $notification.removeNotifications(), 3000)
 
-      window.localStorage.setItem("userID", res)
+      window.localStorage.setItem("tokenUser", res.token)
 
       return navigate("/ops", { replace: true })
     }
     if (response.status !== 200) {
       $notification.setErrors(response.statusText)
-      return setInterval(() => $notification.removeErrors(), 3000)
     }
   }
 </script>

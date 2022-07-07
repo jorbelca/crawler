@@ -1,13 +1,13 @@
 
 export const validateUsername = (username) => {
-  if (username == "" || undefined || null || username.length < 3) {
+  if (username == "" || undefined || null || username.length < 3 || username.length > 15) {
     return false
   }
   return true
 }
 
 export const validatePassword = (password) => {
-  if (password == "" || undefined || null || password.length < 3) {
+  if (password == "" || undefined || null || password.length < 3 || password.length > 23) {
     return false
   }
   return true

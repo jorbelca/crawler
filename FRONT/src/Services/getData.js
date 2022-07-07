@@ -1,14 +1,17 @@
-const apiUrl = "http://localhost:3030/api"
+import { tokenSetter } from "../Helpers/tokenSetter";
+import { apiUrl } from "./register";
 
-export const getData = async (userID) => {
+
+
+export const getData = async () => {
   try {
-    const response = await fetch(`${apiUrl}/data`, {
+    const response = await fetch(`${apiUrl}/api/data`, {
       method: "POST",
       mode: "cors",
-      body: JSON.stringify({ userID: userID }),
       headers: {
         "Content-Type": "application/json; charset=UTF-8 ",
         Accept: "application/json",
+        Authorization: tokenSetter()
       },
     })
     return response
