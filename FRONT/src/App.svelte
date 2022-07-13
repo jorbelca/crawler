@@ -10,9 +10,17 @@
   import Footer from "./Components/Footer.svelte"
   import { userStore } from "./State/store"
 
+  const tokenLocal = userStore.getUser()
+
   const handleLogout = async () => {
     userStore.removeUser()
     navigate("/", { replace: true })
+  }
+
+  if (tokenLocal !== null && tokenLocal.length > 0) {
+    userStore.setUser(tokenLocal)
+  } else {
+    handleLogout()
   }
 </script>
 
@@ -41,20 +49,6 @@
               style="text-decoration:none; color:black"
               to="/">Home</Link
             >
-
-            <Link
-              class="btn btn-link"
-              style="text-decoration:none; color:black"
-              to="/login">Login</Link
-            >
-
-            <Link
-              class="btn btn-link"
-              style="text-decoration:none; color:black"
-              to="/registro">Registrarse</Link
-            >
-
-            <!-- IZQUIERDA  -->
             {#if $userStore.length > 0}
               <Link
                 class="btn btn-link"
@@ -78,6 +72,18 @@
                   style="text-decoration:none;color:red"
                   class="fa-solid fa-right-from-bracket"
                 /></span
+              >
+            {:else}
+              <Link
+                class="btn btn-link"
+                style="text-decoration:none; color:black"
+                to="/login">Login</Link
+              >
+
+              <Link
+                class="btn btn-link"
+                style="text-decoration:none; color:black"
+                to="/registro">Registrarse</Link
               >
             {/if}
           </section>

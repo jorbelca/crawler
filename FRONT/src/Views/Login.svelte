@@ -20,7 +20,7 @@
     let res
     try {
       response = await loginUser(email, password)
-      res = await response.json()
+      if (response.status === 200) res = await response.json()
     } catch (error) {
       console.error(error)
     }
@@ -31,6 +31,10 @@
       return navigate("/ops", { replace: true })
     }
     if (response.status !== 200) {
+      if (response == "TypeError: Failed to fetch")
+        return errorStore.setErrors(
+          "Hay un problema con la conexión con el servidor"
+        )
       errorStore.setErrors(response.statusText)
     }
   }

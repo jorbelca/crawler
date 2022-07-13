@@ -43,6 +43,10 @@ const userStr = (() => {
       set([token])
       window.localStorage.setItem("tokenUser", token)
     },
+    getUser: () => {
+      const token = window.localStorage.getItem("tokenUser")
+      return token
+    },
     removeUser: () => {
       set([])
       window.localStorage.removeItem("tokenUser")

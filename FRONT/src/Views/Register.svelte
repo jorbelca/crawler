@@ -15,28 +15,25 @@
   const handleSubmit = async () => {
     if (!validateEmail(email)) {
       errorStore.setErrors("Por favor introduzca una direccion de email válida")
-      return setInterval(() => errorStore.removeErrors(), 3000)
     }
     if (!validatePassword(password)) {
       errorStore.setErrors("Por favor introduzca una contraseña válida")
-      return setInterval(() => errorStore.removeErrors(), 3000)
     }
     if (!validateUsername(username)) {
       errorStore.setErrors("Por favor introduzca una nombre de usuario válido")
-      return setInterval(() => errorStore.removeErrors(), 3000)
     }
     const response = await registerUser(email, username, password)
 
     if (response.status === 200) {
       notificationStore.setNotifications(response.statusText)
-      setInterval(() => notificationStore.removeNotifications(), 3000)
-      console.log(response.statusText)
       return navigate("/login", { replace: true })
     }
     if (response.status !== 200) {
-      console.log(response)
-      errorStore.setErrors(response.statusText)
-      return setInterval(() => errorStore.removeErrors(), 3000)
+      if (response.statusText === undefined)
+        return errorStore.setErrors(
+          "Hay un problema con la conexión con el servidor"
+        )
+      return errorStore.setErrors(response.statusText)
     }
   }
 </script>
