@@ -1,5 +1,6 @@
 <script>
-  import notification from "../State/store.js"
+  import { notificationStore, errorStore, userStore } from "../State/store.js"
+
   import { navigate } from "svelte-routing"
 
   import { loginUser } from "../Services/login"
@@ -10,12 +11,10 @@
 
   const handleSubmit = async () => {
     if (!validateEmail(email)) {
-      $notification.setErrors(
-        "Por favor introduzca una direccion de email válida"
-      )
+      errorStore.setErrors("Por favor introduzca una direccion de email válida")
     }
     if (!validatePassword(password)) {
-      $notification.setErrors("Por favor introduzca una contraseña válida")
+      errorStore.setErrors("Por favor introduzca una contraseña válida")
     }
     let response
     let res
@@ -26,16 +25,13 @@
       console.error(error)
     }
 
-
     if (response.status === 200) {
-      $notification.setNotifications(response.statusText)
-
-      window.localStorage.setItem("tokenUser", res.token)
-
+      notificationStore.setNotifications(response.statusText)
+      userStore.setUser(res.token)
       return navigate("/ops", { replace: true })
     }
     if (response.status !== 200) {
-      $notification.setErrors(response.statusText)
+      errorStore.setErrors(response.statusText)
     }
   }
 </script>
@@ -73,7 +69,9 @@
       </div>
     </div>
     <br />
-    <button>Log In &nbsp<i class="fa-solid fa-arrow-right" /></button>
+    <button class="login-btn"
+      >Log In &nbsp<i class="fa-solid fa-arrow-right" /></button
+    >
   </form>
 </main>
 
@@ -98,7 +96,9 @@
     margin: 1rem auto;
     max-width: 14rem;
   }
-
+  .login-btn {
+    font-weight: 100;
+  }
   @media (min-width: 480px) {
     h1 {
       max-width: none;

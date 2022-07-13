@@ -2,7 +2,7 @@
   import { changeProfileData, getProfileData } from "../Services/profileUser.js"
   import { onMount } from "svelte"
   import { getData } from "../Services/getData.js"
-  import notification from "../State/store.js"
+  import { notificationStore, errorStore, userStore } from "../State/store.js"
   import {
     validateEmail,
     validatePassword,
@@ -23,8 +23,8 @@
       email = json.email
     }
     if (response.status !== 200) {
-      $notification.setErrors(response.statusText)
-      return setInterval(() => $notification.removeErrors(), 3000)
+      errorStore.setErrors(response.statusText)
+      return setInterval(() => errorStore.removeErrors(), 3000)
     }
   })
 
@@ -41,8 +41,8 @@
       data = await response
 
     if (res.status !== 200) {
-      $notification.setErrors(response.statusText)
-      return setInterval(() => $notification.removeErrors(), 3000)
+      errorStore.setErrors(response.statusText)
+      return setInterval(() => errorStore.removeErrors(), 3000)
     }
   }
   let newEmail
@@ -65,16 +65,16 @@
       const response = await eliminateOperation(id)
       const json = await response.json()
       if (response.status !== 200) {
-        if (json) $notification.setErrors(json.message)
-        $notification.setErrors(response.statusText)
-        return setInterval(() => $notification.removeErrors(), 3000)
+        if (json) errorStore.setErrors(json.message)
+        errorStore.setErrors(response.statusText)
+        return setInterval(() => errorStore.removeErrors(), 3000)
       }
       if (response.status === 200) {
         document.getElementById("selector").style.visibility = "hidden "
 
         dataTable = []
-        $notification.setNotifications(json.message)
-        setInterval(() => $notification.removeNotifications(), 3000)
+        notificationStore.setNotifications(json.message)
+        setInterval(() => notificationStore.removeNotifications(), 3000)
         return
       }
     }
@@ -91,13 +91,13 @@
       const json = await response.json()
 
       if (response.status !== 200) {
-        if (json) $notification.setErrors(json.message)
-        $notification.setErrors(response.statusText)
-        return setInterval(() => $notification.removeErrors(), 3000)
+        if (json) errorStore.setErrors(json.message)
+        errorStore.setErrors(response.statusText)
+        return setInterval(() => errorStore.removeErrors(), 3000)
       }
       if (response.status === 200) {
-        $notification.setNotifications(json.message)
-        setInterval(() => $notification.removeNotifications(), 3000)
+        notificationStore.setNotifications(json.message)
+        setInterval(() => notificationStore.removeNotifications(), 3000)
         return navigate("/home", { replace: true })
       }
     }
@@ -111,20 +111,20 @@
     }
     if (newData.password !== null) {
       if (!validatePassword(newData.password)) {
-        return $notification.setErrors(
+        return errorStore.setErrors(
           "Por favor introduzca una contraseña válida"
         )
       }
     }
 
     if (!validateUsername(newData.username)) {
-      return $notification.setErrors(
+      return errorStore.setErrors(
         "Por favor introduzca una nombre de usuario válido"
       )
     }
 
     if (!validateEmail(newData.email)) {
-      return $notification.setErrors(
+      return errorStore.setErrors(
         "Por favor introduzca una direccion de email válida"
       )
     }
@@ -133,14 +133,14 @@
 
     if (response.status !== 200) {
       const json = await response.json()
-      return $notification.setErrors(json.message)
+      return errorStore.setErrors(json.message)
     }
     resetForm()
     if (response.status === 200) {
       username = newData.username
       email = newData.email
 
-      return $notification.setNotifications(response.statusText)
+      return notificationStore.setNotifications(response.statusText)
     }
   }
 
@@ -151,12 +151,12 @@
     const response = await changeTime(newTime, id)
 
     if (response.status !== 200) {
-      $notification.setErrors(response.statusText)
-      return setInterval(() => $notification.removeErrors(), 3000)
+      errorStore.setErrors(response.statusText)
+      return setInterval(() => errorStore.removeErrors(), 3000)
     }
     if (response.status === 200) {
-      $notification.setNotifications(response.statusText)
-      setInterval(() => $notification.removeNotifications(), 3000)
+      notificationStore.setNotifications(response.statusText)
+      setInterval(() => notificationStore.removeNotifications(), 3000)
       location.reload()
     }
   }
@@ -381,6 +381,9 @@
     margin-top: 20px;
     margin-bottom: 20px;
   }
+  .form-btns > button {
+    font-weight: 100;
+  }
   .btn-sm {
     margin: 5px;
   }
@@ -392,10 +395,17 @@
     justify-content: center;
     align-items: baseline;
   }
+  .btn-select #btn-carga {
+    font-weight: 100;
+  }
   .table-head {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+  }
+  .table-head > select,
+  .table-head > a {
+    font-weight: 100;
   }
   #modal-id {
     visibility: hidden;

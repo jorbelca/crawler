@@ -8,11 +8,10 @@
   import { Link, Router, Route } from "svelte-routing"
   import { navigate } from "svelte-routing"
   import Footer from "./Components/Footer.svelte"
-
-  $: tokenUser = window.localStorage.getItem("tokenUser")
+  import { userStore } from "./State/store"
 
   const handleLogout = async () => {
-    window.localStorage.removeItem("tokenUser")
+    userStore.removeUser()
     navigate("/", { replace: true })
   }
 </script>
@@ -56,7 +55,7 @@
             >
 
             <!-- IZQUIERDA  -->
-            {#if tokenUser}
+            {#if $userStore.length > 0}
               <Link
                 class="btn btn-link"
                 style="text-decoration:none; color:black"

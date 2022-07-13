@@ -1,5 +1,5 @@
 <script>
-  import notification from "../State/store.js"
+  import { notificationStore, errorStore } from "../State/store.js"
   import { navigate } from "svelte-routing"
   import { registerUser } from "../Services/register.js"
   import {
@@ -14,33 +14,29 @@
 
   const handleSubmit = async () => {
     if (!validateEmail(email)) {
-      $notification.setErrors(
-        "Por favor introduzca una direccion de email válida"
-      )
-      return setInterval(() => $notification.removeErrors(), 3000)
+      errorStore.setErrors("Por favor introduzca una direccion de email válida")
+      return setInterval(() => errorStore.removeErrors(), 3000)
     }
     if (!validatePassword(password)) {
-      $notification.setErrors("Por favor introduzca una contraseña válida")
-      return setInterval(() => $notification.removeErrors(), 3000)
+      errorStore.setErrors("Por favor introduzca una contraseña válida")
+      return setInterval(() => errorStore.removeErrors(), 3000)
     }
     if (!validateUsername(username)) {
-      $notification.setErrors(
-        "Por favor introduzca una nombre de usuario válido"
-      )
-      return setInterval(() => $notification.removeErrors(), 3000)
+      errorStore.setErrors("Por favor introduzca una nombre de usuario válido")
+      return setInterval(() => errorStore.removeErrors(), 3000)
     }
     const response = await registerUser(email, username, password)
 
     if (response.status === 200) {
-      $notification.setNotifications(response.statusText)
-      setInterval(() => $notification.removeNotifications(), 3000)
+      notificationStore.setNotifications(response.statusText)
+      setInterval(() => notificationStore.removeNotifications(), 3000)
       console.log(response.statusText)
       return navigate("/login", { replace: true })
     }
     if (response.status !== 200) {
       console.log(response)
-      $notification.setErrors(response.statusText)
-      return setInterval(() => $notification.removeErrors(), 3000)
+      errorStore.setErrors(response.statusText)
+      return setInterval(() => errorStore.removeErrors(), 3000)
     }
   }
 </script>
@@ -92,8 +88,8 @@
       </div>
     </div>
     <br />
-    <button type="submit">Registrarse</button>
-    <button disabled>Cancelar</button>
+    <button class="register-btn" type="submit">Registrarse</button>
+    <button class="register-btn" disabled>Cancelar</button>
   </form>
 </main>
 
@@ -117,6 +113,9 @@
     line-height: 1.1;
     margin: 1rem auto;
     max-width: 14rem;
+  }
+  .register-btn {
+    font-weight: 100;
   }
 
   @media (min-width: 480px) {

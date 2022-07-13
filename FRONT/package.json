@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "the_small_crawler",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "spectre.css": "^0.5.9",
-    "svelte-routing": "^1.6.0",
-    "zustand": "^4.0.0-rc.1"
+    "svelte-routing": "^1.6.0"
   }
 }
