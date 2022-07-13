@@ -12,9 +12,26 @@
   const handleSubmit = async () => {
     const spinner = document.getElementById("spinner")
     spinner.style.visibility = "visible"
+
+    if (/[a-zA-Z\d]/gm.test(selectorClass[0])) {
+      spinner.style.visibility = "hidden"
+      return errorStore.setErrors(
+        "Por favor introduce el tipo de selector correctamente"
+      )
+    }
     const response = await searchUrl(url, selectorClass)
     const span = document.getElementById("value")
 
+    if (response == "TypeError: Failed to fetch") {
+      spinner.style.visibility = "hidden"
+      return errorStore.setErrors(
+        "Hay un problema con la conexión con el servidor"
+      )
+    }
+    if (Object.keys(response.response).length === 0) {
+      spinner.style.visibility = "hidden"
+      return errorStore.setErrors("No hemos encontrado lo que buscabas")
+    }
     if (response) {
       spinner.style.visibility = "hidden"
       span.innerText = response.response
@@ -46,11 +63,13 @@
     if (response.status === 200) {
       document.getElementById("guardar").style.visibility = "hidden"
       notificationStore.setNotifications(response.statusText)
-      setInterval(() => notificationStore.removeNotifications(), 3000)
     }
     if (response.status !== 200) {
-      errorStore.setErrors(response.statusText)
-      setInterval(() => errorStore.removeErrors(), 3000)
+      if (response.statusText === undefined)
+        return errorStore.setErrors(
+          "Hay un problema con la conexión con el servidor"
+        )
+      return errorStore.setErrors(response.statusText)
     }
   }
 </script>
@@ -70,7 +89,11 @@
 
     <div class="form-group">
       <div class="col-3 col-sm-12">
-        <label class="form-label label-sm " for="selector">Selector</label>
+        <label class="form-label label-sm " for="selector"
+          >Selector <p>
+            (Si es class, el primer caracter un punto, si es id almohadilla)
+          </p></label
+        >
       </div>
       <div class="col-9 col-sm-12">
         <input

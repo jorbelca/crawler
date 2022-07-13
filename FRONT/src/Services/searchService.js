@@ -18,7 +18,7 @@ export const searchUrl = async (url, selectorClass) => {
     return response.json()
   } catch (error) {
     console.log(error);
-    return error.json()
+    return error
   }
 
 }

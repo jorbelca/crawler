@@ -23,8 +23,11 @@
       email = json.email
     }
     if (response.status !== 200) {
-      errorStore.setErrors(response.statusText)
-      return setInterval(() => errorStore.removeErrors(), 3000)
+      if (response == "TypeError: Failed to fetch")
+        return errorStore.setErrors(
+          "Hay un problema con la conexión con el servidor"
+        )
+      return errorStore.setErrors(response.statusText)
     }
   })
 
@@ -35,14 +38,21 @@
     document.getElementById("selector").style.visibility = "visible "
 
     const res = await getData()
+    if (res == "TypeError: Failed to fetch")
+      return errorStore.setErrors(
+        "Hay un problema con la conexión con el servidor"
+      )
     let response = await res.json()
 
     if (response !== undefined || response.length > 0 || response !== null)
       data = await response
 
     if (res.status !== 200) {
-      errorStore.setErrors(response.statusText)
-      return setInterval(() => errorStore.removeErrors(), 3000)
+      if (response == "TypeError: Failed to fetch")
+        return errorStore.setErrors(
+          "Hay un problema con la conexión con el servidor"
+        )
+      return errorStore.setErrors(response.statusText)
     }
   }
   let newEmail
@@ -64,18 +74,16 @@
     ) {
       const response = await eliminateOperation(id)
       const json = await response.json()
+
       if (response.status !== 200) {
         if (json) errorStore.setErrors(json.message)
-        errorStore.setErrors(response.statusText)
-        return setInterval(() => errorStore.removeErrors(), 3000)
+        return errorStore.setErrors(response.statusText)
       }
       if (response.status === 200) {
         document.getElementById("selector").style.visibility = "hidden "
 
         dataTable = []
-        notificationStore.setNotifications(json.message)
-        setInterval(() => notificationStore.removeNotifications(), 3000)
-        return
+        return notificationStore.setNotifications(json.message)
       }
     }
   }
@@ -92,12 +100,15 @@
 
       if (response.status !== 200) {
         if (json) errorStore.setErrors(json.message)
-        errorStore.setErrors(response.statusText)
-        return setInterval(() => errorStore.removeErrors(), 3000)
+        if (response == "TypeError: Failed to fetch")
+          return errorStore.setErrors(
+            "Hay un problema con la conexión con el servidor"
+          )
+        return errorStore.setErrors(response.statusText)
       }
       if (response.status === 200) {
         notificationStore.setNotifications(json.message)
-        setInterval(() => notificationStore.removeNotifications(), 3000)
+
         return navigate("/home", { replace: true })
       }
     }
@@ -132,6 +143,10 @@
     const response = await changeProfileData(newData)
 
     if (response.status !== 200) {
+      if (response == "TypeError: Failed to fetch")
+        return errorStore.setErrors(
+          "Hay un problema con la conexión con el servidor"
+        )
       const json = await response.json()
       return errorStore.setErrors(json.message)
     }
@@ -151,12 +166,14 @@
     const response = await changeTime(newTime, id)
 
     if (response.status !== 200) {
-      errorStore.setErrors(response.statusText)
-      return setInterval(() => errorStore.removeErrors(), 3000)
+      if (response.statusText === undefined)
+        return errorStore.setErrors(
+          "Hay un problema con la conexión con el servidor"
+        )
+      return errorStore.setErrors(response.statusText)
     }
     if (response.status === 200) {
       notificationStore.setNotifications(response.statusText)
-      setInterval(() => notificationStore.removeNotifications(), 3000)
       location.reload()
     }
   }
