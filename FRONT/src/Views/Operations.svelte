@@ -1,6 +1,6 @@
 <script>
   import { saveUrl, searchUrl } from "../Services/searchService.js"
-  import notification from "../State/store.js"
+  import { notificationStore, errorStore } from "../State/store.js"
 
   let url = "https://www.deporvillage.com/kettlebell-ruster-cast-iron-28-kg"
   let selectorClass = ".Product_product-price__2P9So"
@@ -26,14 +26,14 @@
   // SAVE
   const handleSave = async () => {
     if (time == undefined || null) {
-      $notification.setErrors(
+      errorStore.setErrors(
         "Por favor, seleccione una frecuencia de comprobacion"
       )
-      return setInterval(() => $notification.removeErrors(), 3000)
+      return setInterval(() => errorStore.removeErrors(), 3000)
     }
     if (initialData == undefined || null) {
-      $notification.setErrors("Por favor, haga una búsqueda válida")
-      return setInterval(() => $notification.removeErrors(), 3000)
+      errorStore.setErrors("Por favor, haga una búsqueda válida")
+      return setInterval(() => errorStore.removeErrors(), 3000)
     }
 
     const response = await saveUrl(
@@ -45,12 +45,12 @@
 
     if (response.status === 200) {
       document.getElementById("guardar").style.visibility = "hidden"
-      $notification.setNotifications(response.statusText)
-      setInterval(() => $notification.removeNotifications(), 3000)
+      notificationStore.setNotifications(response.statusText)
+      setInterval(() => notificationStore.removeNotifications(), 3000)
     }
     if (response.status !== 200) {
-      $notification.setErrors(response.statusText)
-      setInterval(() => $notification.removeErrors(), 3000)
+      errorStore.setErrors(response.statusText)
+      setInterval(() => errorStore.removeErrors(), 3000)
     }
   }
 </script>
@@ -92,7 +92,7 @@
   <div id="guardar">
     <form class="form-horizontal" on:submit|preventDefault={handleSave}>
       <div class="search-result">
-        <div class="form-group">
+        <div class="form-group search-result">
           <div class="col-3 col-sm-12">
             <label class="form-label label-sm " for="select-frecuency"
               >Frecuencia de comprobación</label
@@ -137,13 +137,23 @@
   #spinner {
     visibility: hidden;
   }
+  .guardar-btn {
+    font-weight: 100;
+  }
+  #buscar-btn {
+    font-weight: 100;
+  }
   #guardar {
     visibility: hidden;
+    font-weight: 100;
   }
   .search-result {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  #select-frecuency {
+    font-weight: 100;
   }
   span#value {
     padding-left: 45px;

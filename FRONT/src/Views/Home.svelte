@@ -2,7 +2,7 @@
 </script>
 
 <svelte:head>
-  <title>Welcome</title>
+  <title>the Small Crawler</title>
 </svelte:head>
 
 <main>
@@ -25,6 +25,6 @@
     line-height: 1.1;
     margin: 0.3rem auto;
     max-width: 14rem;
-    color: goldenrod;
+    color: rgb(218, 165, 32);
   }
 </style>
