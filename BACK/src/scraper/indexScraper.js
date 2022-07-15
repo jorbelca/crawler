@@ -27,7 +27,6 @@ export const urlData = async (url, selector) => {
   }
 
 
-
 }
 
 

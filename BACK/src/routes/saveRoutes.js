@@ -2,11 +2,12 @@ import express from 'express'
 import Operation from '../schemas/operationsSchema.js';
 import User from '../schemas/userSchema.js'
 import getTime from '../utils/getTime.js';
+import tokenExtractor from '../utils/tokenExtractor.js';
 
 const saveRouter = express.Router()
 
 
-saveRouter.post('/', async (request, response) => {
+saveRouter.post('/', tokenExtractor, async (request, response) => {
   const { url, selector, time, initialData, userID } = request.body
 
   if (userID == null || undefined) { return response.status(400).send('No user identified') }

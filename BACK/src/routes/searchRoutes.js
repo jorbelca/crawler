@@ -1,11 +1,12 @@
 import express from 'express'
 import { urlData } from "../scraper/indexScraper.js";
+import tokenExtractor from '../utils/tokenExtractor.js';
 
 
 const searchRouter = express.Router()
 
 
-searchRouter.post('/', async (req, res) => {
+searchRouter.post('/', tokenExtractor, async (req, res) => {
   const { url, selector } = req.body
 
   try {
@@ -16,7 +17,7 @@ searchRouter.post('/', async (req, res) => {
   } catch (error) {
     console.log(error);
 
-    return response.status(400).send(error)
+    return res.status(400).send(error)
   }
 
 });
