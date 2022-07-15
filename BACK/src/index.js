@@ -1,4 +1,4 @@
-import express, { response } from 'express'
+import express from 'express'
 import http from 'http'
 import cors from 'cors'
 import { json } from 'express'
@@ -22,7 +22,10 @@ import changeTimeRouter from './routes/changeTimeRoutes.js';
 
 const app = express();
 // app.use(express.static('dist'));
-app.use(cors())
+app.use(cors({
+  "origin": "http://localhost:3000 ,https://thesmallcrawler.vercel.app ",
+  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+}))
 app.use(json())
 app.use(express.urlencoded({ extended: true }))
 app.use('/ping', (req, res) => { return res.status(200).send('PONG') })
