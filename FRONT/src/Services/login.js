@@ -11,7 +11,7 @@ export const loginUser = async (email, password) => {
         "Content-Type": "application/json; charset=UTF-8 ",
         Accept: "application/json",
       },
-      credentials: 'include'
+
     })
     return response
   } catch (error) {
