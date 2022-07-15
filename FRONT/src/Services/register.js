@@ -1,5 +1,5 @@
-export const apiUrl = "http://localhost:3030" || ""
-
+export const apiUrl = import.meta.env.VITE_API_URL
+console.log(apiUrl);
 export const registerUser = async (email, username, password) => {
 
   try {
