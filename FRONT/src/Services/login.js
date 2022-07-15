@@ -10,8 +10,9 @@ export const loginUser = async (email, password) => {
       headers: {
         "Content-Type": "application/json; charset=UTF-8 ",
         Accept: "application/json",
+        'Access-Control-Allow-Origin': "https://thesmallcrawler.vercel.app "
       },
-
+credentials:true
     })
     return response
   } catch (error) {
