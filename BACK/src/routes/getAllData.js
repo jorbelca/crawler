@@ -1,10 +1,11 @@
 import express from 'express'
 import Operation from '../schemas/operationsSchema.js';
+import tokenExtractor from '../utils/tokenExtractor.js';
 
 const getDataRouter = express.Router()
 
 
-getDataRouter.post('/', async (request, response) => {
+getDataRouter.post('/', tokenExtractor, async (request, response) => {
   const { userID } = request.body
 
   try {

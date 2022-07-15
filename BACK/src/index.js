@@ -1,18 +1,16 @@
-import express from 'express'
+import express, { response } from 'express'
 import http from 'http'
 import cors from 'cors'
 import { json } from 'express'
-import { MONGO, PORT, SECRET } from '../configEnv.js';
+import { MONGO, PORT } from '../configEnv.js';
 import loginRouter from './routes/loginRoutes.js';
 import registerRouter from './routes/registerRoutes.js';
 import searchRouter from './routes/searchRoutes.js';
-import logoutRouter from './routes/logoutRoutes.js';
+
 import saveRouter from './routes/saveRoutes.js';
 import eliminateUserRouter from './routes/eliminateUserRoutes.js';
 import mongoose from 'mongoose';
-import session from 'express-session'
 
-import MongoStore from 'connect-mongo'
 import getDataRouter from './routes/getAllData.js';
 import profileRouter from './routes/getProfileData.js';
 import eliminateOpsRouter from './routes/eliminateOpsRouter.js';
@@ -21,11 +19,13 @@ import changeTimeRouter from './routes/changeTimeRoutes.js';
 
 
 
+
 const app = express();
+// app.use(express.static('dist'));
 app.use(cors())
 app.use(json())
 app.use(express.urlencoded({ extended: true }))
-
+app.use('/ping', (req, res) => { return res.status(200).send('PONG') })
 app.use('/api/register', registerRouter)
 
 
@@ -35,27 +35,30 @@ const dbOptions = {
 }
 connectMDB()
 
-const sessionStore = new MongoStore({
-  mongoUrl: `${MONGO}`,
-  collectionName: 'sessions'
+// const sessionStore = new MongoStore({
+//   mongoUrl: `${MONGO}`,
+//   collectionName: 'sessions'
+// })
+
+// const oneDay = 1000 * 60 * 60 * 24;
+
+
+// app.use(session({
+//   cookie: { sameSite: 'none', maxAge: oneDay, secure: 'auto' },
+//   name: 'smallCrawler',
+//   secret: `${SECRET}`,
+//   store: sessionStore,
+//   saveUninitialized: false,
+//   resave: false,
+// }));
+
+
+app.get('/api/ping', (_request, response) => {
+  return response.status(200).json({ message: "PONG!!" })
 })
-
-const oneDay = 1000 * 60 * 60 * 24;
-
-
-app.use(session({
-  secret: SECRET,
-  saveUninitialized: true,
-  resave: false,
-  store: sessionStore,
-  cookie: { maxAge: oneDay, secure: 'auto' },
-}));
-
-
-
 app.use('/api/login', loginRouter)
 app.use('/api/search', searchRouter)
-app.use('/api/logout', logoutRouter)
+
 app.use('/api/save', saveRouter)
 app.use('/api/eliminate-user', eliminateUserRouter)
 app.use('/api/eliminate-operation', eliminateOpsRouter)
@@ -78,4 +81,6 @@ function connectMDB() {
 http.createServer(app).listen(PORT, function () {
   console.log('Server listening on port ' + PORT);
   cronoScraper()
+
 });
+

@@ -1,11 +1,11 @@
 import express from "express";
 import Operation from "../schemas/operationsSchema.js";
-
 import User from "../schemas/userSchema.js";
+import tokenExtractor from "../utils/tokenExtractor.js";
 
 const eliminateUserRouter = express.Router()
 
-eliminateUserRouter.delete('/', async (request, response) => {
+eliminateUserRouter.delete('/', tokenExtractor, async (request, response) => {
   const { userID } = request.body
 
   try {

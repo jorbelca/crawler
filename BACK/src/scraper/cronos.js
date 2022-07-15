@@ -46,7 +46,7 @@ export const mappingOperations = async () => {
 
 
 
-    console.log(lastTime, time, nextTime / 1000 / 60, currentTime, (nextTime - currentTime.getTime()) / 1000 / 60);
+    // console.log(lastTime, time, nextTime / 1000 / 60, currentTime, (nextTime - currentTime.getTime()) / 1000 / 60);
 
   }
 }
