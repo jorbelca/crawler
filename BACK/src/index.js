@@ -25,7 +25,8 @@ const app = express();
 app.use(cors({
   "origin": "https://thesmallcrawler.vercel.app ",
   "methods": "GET,PUT,POST,DELETE",
-  'Access-Control-Allow-Origin': true
+  'Access-Control-Allow-Origin': true,
+  credentials:true
 }))
 app.use(json())
 app.use(express.urlencoded({ extended: true }))
