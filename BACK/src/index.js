@@ -23,8 +23,8 @@ import changeTimeRouter from './routes/changeTimeRoutes.js';
 const app = express();
 // app.use(express.static('dist'));
 app.use(cors({
-  "origin": "http://localhost:3000 ,https://thesmallcrawler.vercel.app ",
-  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+  "origin": "https://thesmallcrawler.vercel.app ",
+  "methods": "GET,PUT,POST,DELETE",
 }))
 app.use(json())
 app.use(express.urlencoded({ extended: true }))
