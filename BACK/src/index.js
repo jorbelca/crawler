@@ -26,11 +26,11 @@ app.use(cors({
   "origin": "https://thesmallcrawler.vercel.app ",
   "methods": "GET,PUT,POST,DELETE",
   'Access-Control-Allow-Origin': true,
-  credentials:true
+  'credentials': include
 }))
 app.use(json())
 app.use(express.urlencoded({ extended: true }))
-app.use('/ping', (req, res) => { return res.status(200).send('PONG') })
+app.use('/ping', (_req, res) => { return res.status(200).send('PONG') })
 app.use('/api/register', registerRouter)
 
 
