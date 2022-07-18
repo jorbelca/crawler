@@ -187,7 +187,7 @@
 <main>
   <h1>Perfil</h1>
   <div class="form-flex">
-    <form class="form-horizontal" on:submit={changeProfile}>
+    <form class="form-horizontal" on:submit={changeProfile} autocomplete="off">
       <div class="form-form">
         <div class="form-group">
           <div class="col-3 col-sm-12">
