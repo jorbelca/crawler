@@ -19,7 +19,7 @@ import changeTimeRouter from './routes/changeTimeRoutes.js';
 
 
 const corsOptions = {
-  origin: "https://thesmallcrawler.vercel.app",
+  origin: ["https://thesmallcrawler.vercel.app", "http://localhost:3000"],
   optionsSuccessStatus: 204
 }
 
