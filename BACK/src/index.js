@@ -18,16 +18,14 @@ import { cronoScraper } from './scraper/cronos.js';
 import changeTimeRouter from './routes/changeTimeRoutes.js';
 
 
-
+const corsOptions = {
+  origin: "https://thesmallcrawler.vercel.app",
+  optionsSuccessStatus: 204
+}
 
 const app = express();
 // app.use(express.static('dist'));
-// app.use(cors({
-//   "origin": "https://thesmallcrawler.vercel.app ",
-//   "methods": "GET,PUT,POST,DELETE",
-//   'Access-Control-Allow-Origin': true,
-
-// }))
+app.use(cors(corsOptions))
 app.use(json())
 app.use(express.urlencoded({ extended: true }))
 app.use('/ping', (_req, res) => { return res.status(200).send('PONG') })
