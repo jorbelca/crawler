@@ -200,7 +200,7 @@
               bind:value={newEmail}
               type="email"
               placeholder={email}
-              autocomplete="true"
+              autocomplete="false"
             />
           </div>
         </div>
@@ -218,7 +218,7 @@
               bind:value={newUsername}
               type="text"
               placeholder={username}
-              autocomplete="true"
+              autocomplete="false"
             />
           </div>
         </div>
@@ -233,7 +233,7 @@
               id="pass"
               class="form-input input-sm"
               bind:value={newPassword}
-              autocomplete="true"
+              autocomplete="false"
             />
           </div>
         </div>
