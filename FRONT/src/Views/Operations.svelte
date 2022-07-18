@@ -197,4 +197,9 @@
       padding-left: 0;
     }
   }
+  @media (min-width: 480px) {
+    #spinner {
+      margin-left: 60px;
+    }
+  }
 </style>
