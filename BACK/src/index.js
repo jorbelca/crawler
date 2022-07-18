@@ -25,10 +25,11 @@ const corsOptions = {
 
 const app = express();
 // app.use(express.static('dist'));
+app.options('*', cors(corsOptions))
 app.use(cors(corsOptions))
 app.use(json())
 app.use(express.urlencoded({ extended: true }))
-app.use('/ping', (_req, res) => { return res.status(200).send('PONG') })
+
 app.use('/api/register', registerRouter)
 
 
