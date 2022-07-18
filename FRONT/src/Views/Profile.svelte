@@ -108,8 +108,8 @@
       }
       if (response.status === 200) {
         notificationStore.setNotifications(json.message)
-
-        return navigate("/home", { replace: true })
+        userStore.removeUser()
+        return navigate("/", { replace: true })
       }
     }
   }

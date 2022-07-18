@@ -8,7 +8,7 @@ export const loginUser = async (email, password) => {
       mode: 'cors',
       body: JSON.stringify({ email: email, password: password }),
       headers: {
-        "Content-Type": "application/json; charset=UTF-8 ",
+        "Content-Type": "application/json ",
         "Accept": "*/*",
         "Connection": "keep-alive"
       },

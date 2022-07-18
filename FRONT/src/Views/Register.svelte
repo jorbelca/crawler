@@ -23,7 +23,7 @@
       errorStore.setErrors("Por favor introduzca una nombre de usuario válido")
     }
     const response = await registerUser(email, username, password)
-
+    console.log(response)
     if (response.status === 200) {
       notificationStore.setNotifications(response.statusText)
       return navigate("/login", { replace: true })
@@ -81,6 +81,7 @@
           class="form-input input-sm"
           bind:value={password}
           autocomplete="true"
+          type="password"
         />
       </div>
     </div>
