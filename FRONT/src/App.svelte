@@ -6,16 +6,12 @@
   import Profile from "./Views/Profile.svelte"
   import Notifications from "./Components/Notifications.svelte"
   import { Link, Router, Route } from "svelte-routing"
-  import { navigate } from "svelte-routing"
+
   import Footer from "./Components/Footer.svelte"
   import { userStore } from "./State/store"
+  import { handleLogout } from "./Helpers/handleLogout"
 
   const tokenLocal = userStore.getUser()
-
-  const handleLogout = async () => {
-    userStore.removeUser()
-    navigate("/", { replace: true })
-  }
 
   if (tokenLocal !== null && tokenLocal.length > 0) {
     userStore.setUser(tokenLocal)

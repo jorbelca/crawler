@@ -12,6 +12,7 @@
   import { eliminateOperation } from "../Services/eliminateOperation.js"
   import { navigate } from "svelte-routing"
   import { changeTime } from "../Services/changeTime.js"
+  import { handleLogout } from "../Helpers/handleLogout.js"
 
   let username
   let email
@@ -22,7 +23,21 @@
       username = json.username
       email = json.email
     }
-    if (response.status !== 200) {
+    if (Object.keys(response)[0] === "error") {
+      handleLogout()
+      return errorStore.setErrors(response.error)
+    }
+    if (response.response.status !== 200) {
+      if (response.message === "Network Error") {
+        return errorStore.setErrors(response.message)
+      }
+      if (response.response.status === 404) {
+        return errorStore.setErrors(response.response.message)
+      }
+      if (response.response.status === 401) {
+        handleLogout()
+        return errorStore.setErrors(response.response.message)
+      }
       if (response == "TypeError: Failed to fetch")
         return errorStore.setErrors(
           "Hay un problema con la conexión con el servidor"
