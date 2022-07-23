@@ -1,4 +1,6 @@
 <script>
+  import { handleLogout } from "../Helpers/handleLogout.js"
+
   import { saveUrl, searchUrl } from "../Services/searchService.js"
   import { notificationStore, errorStore } from "../State/store.js"
 
@@ -22,22 +24,50 @@
     const response = await searchUrl(url, selectorClass)
     const span = document.getElementById("value")
 
-    if (response == "TypeError: Failed to fetch") {
+    console.log(response.response.status)
+
+    if (response === "TypeError: Failed to fetch") {
       spinner.style.visibility = "hidden"
       return errorStore.setErrors(
         "Hay un problema con la conexión con el servidor"
       )
     }
-    if (Object.keys(response.response).length === 0) {
+    if (response.response.status === 403 || response.response.status === 404) {
       spinner.style.visibility = "hidden"
-      return errorStore.setErrors("No hemos encontrado lo que buscabas")
+      return errorStore.setErrors("Fallo en el selector o en la URL")
     }
-    if (response) {
+    if (Object.keys(response)[0] === "response") {
       spinner.style.visibility = "hidden"
       span.innerText = response.response
       initialData = response.response
       document.getElementById("guardar").style.visibility = "visible "
+
+      if (Object.keys(response.response).length === 0) {
+        spinner.style.visibility = "hidden"
+        return errorStore.setErrors("No hemos encontrado lo que buscabas")
+      }
     }
+
+    if (Object.keys(response)[0] === "error") {
+      handleLogout()
+      return errorStore.setErrors(response.error)
+    }
+
+    // if (response.status !== 200) {
+    //   if (response.message === "Network Error") {
+    //     return errorStore.setErrors(response.message)
+    //   }
+    //   if (response.response.status === 404) {
+    //     handleLogout()
+    //     return errorStore.setErrors(response.response.data.error)
+    //   }
+
+    //   if (response == "TypeError: Failed to fetch")
+    //     return errorStore.setErrors(
+    //       "Hay un problema con la conexión con el servidor"
+    //     )
+    //   return errorStore.setErrors(response.statusText)
+    // }
   }
 
   // SAVE
