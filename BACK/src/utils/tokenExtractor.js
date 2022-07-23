@@ -13,7 +13,11 @@ const tokenExtractor = (request, response, next) => {
     return response.status(401).json({ error: "Token missing or invalid" })
   }
 
-  const decodedToken = jwt.verify(token, SECRET, { algorithm: 'RS256' })
+  let decodedToken
+  try { decodedToken = jwt.verify(token, SECRET, { algorithm: 'RS256' }) } catch (e) {
+    return response.status(401).json({ error: 'Token missing, invalid or timed out' })
+  }
+
 
   if (!decodedToken || !decodedToken.id) {
     return response.status(401).json({ error: "Token missing or invalid" })
