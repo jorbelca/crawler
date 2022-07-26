@@ -60,7 +60,7 @@
     </div>
     <div class="form-group">
       <div class="col-3 col-sm-12">
-        <label class="form-label label-sm " for="pass">Contraseña</label>
+        <label class="form-label label-sm " for="pass">Password</label>
       </div>
       <div class="col-9 col-sm-12">
         <input

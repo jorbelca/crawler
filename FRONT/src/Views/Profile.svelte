@@ -23,20 +23,17 @@
       username = json.username
       email = json.email
     }
-    if (Object.keys(response)[0] === "error") {
+    if (Object.keys(json)[0] === "error") {
       handleLogout()
-      return errorStore.setErrors(response.error)
+      return errorStore.setErrors(json.error)
     }
-    if (response.response.status !== 200) {
+
+    if (response.status !== 200) {
       if (response.message === "Network Error") {
-        return errorStore.setErrors(response.message)
+        return errorStore.setErrors(response.statusText)
       }
-      if (response.response.status === 404) {
-        return errorStore.setErrors(response.response.message)
-      }
-      if (response.response.status === 401) {
-        handleLogout()
-        return errorStore.setErrors(response.response.message)
+      if (response.status === 404) {
+        return errorStore.setErrors(response.statusText)
       }
       if (response == "TypeError: Failed to fetch")
         return errorStore.setErrors(
@@ -59,6 +56,10 @@
       )
     let response = await res.json()
 
+    if (Object.keys(response)[0] === "error") {
+      handleLogout()
+      return errorStore.setErrors(response.error)
+    }
     if (response !== undefined || response.length > 0 || response !== null)
       data = await response
 
@@ -222,9 +223,7 @@
 
         <div class="form-group">
           <div class="col-3 col-sm-12">
-            <label class="form-label label-sm" for="username"
-              >Nombre de Usuario</label
-            >
+            <label class="form-label label-sm" for="username">Username</label>
           </div>
           <div class="col-9 col-sm-12">
             <input
@@ -240,7 +239,7 @@
 
         <div class="form-group">
           <div class="col-3 col-sm-12">
-            <label class="form-label label-sm" for="pass">Contraseña</label>
+            <label class="form-label label-sm" for="pass">Password</label>
           </div>
           <div class="col-9 col-sm-12">
             <input
@@ -261,17 +260,17 @@
             disabled={!newUsername && !newEmail && !newPassword}
             id="cambiar"
             type="submit"
-            on:click|preventDefault={changeProfile}>Cambiar</button
+            on:click|preventDefault={changeProfile}>Change</button
           >
 
           <button
             class="btn btn-sm"
             on:click|preventDefault={resetForm}
-            style={"color:grey"}>Cancelar</button
+            style={"color:grey"}>Cancel</button
           >
           <button
             class="btn btn-error btn-sm"
-            on:click|preventDefault={eliminateProfile}>Eliminar Cuenta</button
+            on:click|preventDefault={eliminateProfile}>Eliminate Account</button
           >
         </div>
       </div>
@@ -279,7 +278,7 @@
   </div>
   <div class="btn-select">
     <button class="btn btn-sm" on:click={handleClick} id="btn-carga"
-      >CARGAR DATOS DE OPERACIONES
+      >CHARGE DATA FROM OPERATIONS
     </button>
 
     <select id="selector" bind:value={dataTable}
@@ -302,10 +301,10 @@
         }}
       >
         <option default
-          >Actualmente, se comprueba cada {dato.time}
-          {dato.time > 1 ? "horas" : "hora"}</option
+          >Now, it is checked every {dato.time}
+          {dato.time > 1 ? "hours" : "hour"}</option
         >
-        <option>Cambiar duración</option>
+        <option>Change duration</option>
       </select>
       <button
         class="btn  btn-error btn-sm"
@@ -323,9 +322,7 @@
               class="btn btn-clear float-right"
               aria-label="Close"
             />
-            <div class="modal-title h5">
-              Seleccionar nueva frecuencia de comprobación
-            </div>
+            <div class="modal-title h5">Select new checking frecuency</div>
           </div>
           <div class="modal-body">
             <div class="content">
@@ -339,14 +336,14 @@
                     <div class="form-group">
                       <div class="col-6 col-sm-12">
                         <select id="select-frecuency" bind:value={newTime}>
-                          <option value="1">1 hora</option>
-                          <option value="2">2 horas</option>
-                          <option value="5">5 horas</option>
-                          <option value="16">16 horas</option>
-                          <option value="24">24 horas</option>
+                          <option value="1">1 hour</option>
+                          <option value="2">2 hours</option>
+                          <option value="5">5 hours</option>
+                          <option value="16">16 hours</option>
+                          <option value="24">24 hours</option>
                         </select>
                         <button class="guardar-btn btn" type="submit"
-                          >Guardar</button
+                          >Save</button
                         >
                       </div>
                     </div>
@@ -363,8 +360,8 @@
     <table class="table ">
       <thead>
         <tr>
-          <th>Fecha // Hora</th>
-          <th>Valor</th>
+          <th>Date // Hour</th>
+          <th>Value</th>
         </tr>
       </thead>
       {#each dato.data as operation}

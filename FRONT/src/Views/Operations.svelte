@@ -4,8 +4,8 @@
   import { saveUrl, searchUrl } from "../Services/searchService.js"
   import { notificationStore, errorStore } from "../State/store.js"
 
-  let url = "https://www.deporvillage.com/kettlebell-ruster-cast-iron-28-kg"
-  let selectorClass = ".Product_product-price__2P9So"
+  let url = "https://www.amazon.es/dp/B07RPMGKQB/ref=twister_B08ZNPDFTC?th=1"
+  let selectorClass = ".a-offscreen"
   let time
   let initialData
 
@@ -24,8 +24,11 @@
     const response = await searchUrl(url, selectorClass)
     const span = document.getElementById("value")
 
-    console.log(response.response.status)
-
+    if (Object.keys(response)[0] === "error") {
+      spinner.style.visibility = "hidden"
+      handleLogout()
+      return errorStore.setErrors(response.error)
+    }
     if (response === "TypeError: Failed to fetch") {
       spinner.style.visibility = "hidden"
       return errorStore.setErrors(
@@ -46,11 +49,6 @@
         spinner.style.visibility = "hidden"
         return errorStore.setErrors("No hemos encontrado lo que buscabas")
       }
-    }
-
-    if (Object.keys(response)[0] === "error") {
-      handleLogout()
-      return errorStore.setErrors(response.error)
     }
 
     // if (response.status !== 200) {
@@ -105,7 +103,7 @@
 </script>
 
 <main>
-  <h1>Operaciones</h1>
+  <h1>Operations</h1>
 
   <form class="form-horizontal" on:submit|preventDefault={handleSubmit}>
     <div class="form-group">
@@ -120,8 +118,9 @@
     <div class="form-group">
       <div class="col-3 col-sm-12">
         <label class="form-label label-sm " for="selector"
-          >Selector <p>
-            (Si es class, el primer caracter un punto, si es id almohadilla)
+          >Selector <p class="helper">
+            (If it is class, the first character is a point, if it is an id, a
+            pad)
           </p></label
         >
       </div>
@@ -136,7 +135,7 @@
     </div>
 
     <div class="search-result">
-      <button id="buscar-btn" class="btn" type="submit">Buscar</button>
+      <button id="buscar-btn" class="btn" type="submit">Search</button>
       <div id="spinner" class="loading loading-lg" />
       <span id="value" />
     </div>
@@ -148,18 +147,18 @@
         <div class="form-group search-result">
           <div class="col-3 col-sm-12">
             <label class="form-label label-sm " for="select-frecuency"
-              >Frecuencia de comprobación</label
+              >Checking Frequency</label
             >
           </div>
           <div class="col-6 col-sm-12">
             <select id="select-frecuency" bind:value={time}>
-              <option value="1">1 hora</option>
-              <option value="2">2 horas</option>
-              <option value="5">5 horas</option>
-              <option value="16">16 horas</option>
-              <option value="24">24 horas</option>
+              <option value="1">1 hour</option>
+              <option value="2">2 hours</option>
+              <option value="5">5 hours</option>
+              <option value="16">16 hours</option>
+              <option value="24">24 hours</option>
             </select>
-            <button class="guardar-btn btn" type="submit">Guardar</button>
+            <button class="guardar-btn btn" type="submit">Save</button>
           </div>
         </div>
       </div>
@@ -210,6 +209,10 @@
   }
   span#value {
     padding-left: 45px;
+  }
+  .helper {
+    font-size: 0.5rem;
+    font-weight: 100;
   }
   @media (max-width: 480px) {
     h1 {

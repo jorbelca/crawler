@@ -10,6 +10,7 @@
   import Footer from "./Components/Footer.svelte"
   import { userStore } from "./State/store"
   import { handleLogout } from "./Helpers/handleLogout"
+  import About from "./Views/About.svelte"
 
   const tokenLocal = userStore.getUser()
 
@@ -49,13 +50,13 @@
               <Link
                 class="btn btn-link"
                 style="text-decoration:none; color:black"
-                to="/ops">Operaciones</Link
+                to="/ops">Operations</Link
               >
 
               <Link
                 class="btn btn-link"
                 style="text-decoration:none; color:black"
-                to="/perfil">Perfil</Link
+                to="/perfil">Profile</Link
               ><span>
                 <Link
                   class="btn btn-link"
@@ -79,7 +80,7 @@
               <Link
                 class="btn btn-link"
                 style="text-decoration:none; color:black"
-                to="/registro">Registrarse</Link
+                to="/registro">Register</Link
               >
             {/if}
           </section>
@@ -89,6 +90,9 @@
 
         <Route path="/">
           <Home />
+        </Route>
+        <Route path="/about">
+          <About />
         </Route>
         <Route path="/login">
           <Login />
