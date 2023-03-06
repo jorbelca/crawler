@@ -11,7 +11,7 @@ export const urlData = async function run(url,selector) {
   try {
     
   const browser = await puppeteer.launch({
-    headless: true, executablePath: executablePath()
+    headless: true, executablePath: executablePath(),args: ['--no-sandbox','--disable-setuid-sandbox'] 
   });
   const page = await browser.newPage();
 
