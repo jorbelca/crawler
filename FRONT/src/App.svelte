@@ -11,6 +11,7 @@
   import { userStore } from "./State/store"
   import { handleLogout } from "./Helpers/handleLogout"
   import About from "./Views/About.svelte"
+  import Data from "./Views/Data.svelte";
 
   const tokenLocal = userStore.getUser()
 
@@ -52,12 +53,19 @@
                 style="text-decoration:none; color:black"
                 to="/ops">Operations</Link
               >
-
+              <Link
+                class="btn btn-link"
+                style="text-decoration:none; color:black"
+                to="/data">Data</Link
+              >
               <Link
                 class="btn btn-link"
                 style="text-decoration:none; color:black"
                 to="/perfil">Profile</Link
-              ><span>
+              >
+              
+              <span>
+                
                 <Link
                   class="btn btn-link"
                   style="text-decoration:none;color:red"
@@ -106,6 +114,9 @@
         <Route path="/ops">
           <Operations />
         </Route>
+        <Route path="/data">
+          <Data />
+        </Route>
       </Router>
     </div>
     <Footer />
@@ -141,7 +152,8 @@
   }
   .nav-logo {
     display: flex;
-    margin-top: -15px;
+    margin-top: -5px;
+    margin-bottom: 10px;
   }
   #logo {
     display: flex;
