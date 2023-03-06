@@ -39,7 +39,7 @@
 </script>
 
 <main>
-  <h1>Registro</h1>
+  <h1>Register</h1>
   <form class="form-horizontal" on:submit|preventDefault={handleSubmit}>
     <div class="form-group">
       <div class="col-3 col-sm-12">

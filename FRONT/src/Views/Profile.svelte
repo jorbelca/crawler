@@ -1,7 +1,6 @@
 <script>
   import { changeProfileData, getProfileData } from "../Services/profileUser.js"
   import { onMount } from "svelte"
-  import { getData } from "../Services/getData.js"
   import { notificationStore, errorStore, userStore } from "../State/store.js"
   import {
     validateEmail,
@@ -9,9 +8,7 @@
     validateUsername,
   } from "../Helpers/validators.js"
   import { eliminateUser } from "../Services/eliminateUser.js"
-  import { eliminateOperation } from "../Services/eliminateOperation.js"
   import { navigate } from "svelte-routing"
-  import { changeTime } from "../Services/changeTime.js"
   import { handleLogout } from "../Helpers/handleLogout.js"
 
   let username
@@ -43,34 +40,7 @@
     }
   })
 
-  let data = []
-  let dataTable = []
-
-  const handleClick = async () => {
-    document.getElementById("selector").style.visibility = "visible "
-
-    const res = await getData()
-    if (res == "TypeError: Failed to fetch")
-      return errorStore.setErrors(
-        "Hay un problema con la conexión con el servidor"
-      )
-    let response = await res.json()
-
-    if (Object.keys(response)[0] === "error") {
-      handleLogout()
-      return errorStore.setErrors(response.error)
-    }
-    if (response !== undefined || response.length > 0 || response !== null)
-      data = await response
-
-    if (res.status !== 200) {
-      if (response == "TypeError: Failed to fetch")
-        return errorStore.setErrors(
-          "Hay un problema con la conexión con el servidor"
-        )
-      return errorStore.setErrors(response.statusText)
-    }
-  }
+  
   let newEmail
   let newPassword
   let newUsername
@@ -81,34 +51,12 @@
     newEmail = ""
   }
 
-  // ELIMINAR SEGUIMIENTO DEL CRAWLER
-  const eliminateOps = async (id) => {
-    if (
-      window.confirm(
-        "Estas seguro?, Esta acción eliminará los datos de seguimiento permanentemente"
-      )
-    ) {
-      const response = await eliminateOperation(id)
-      const json = await response.json()
-
-      if (response.status !== 200) {
-        if (json) errorStore.setErrors(json.message)
-        return errorStore.setErrors(response.statusText)
-      }
-      if (response.status === 200) {
-        document.getElementById("selector").style.visibility = "hidden "
-
-        dataTable = []
-        return notificationStore.setNotifications(json.message)
-      }
-    }
-  }
 
   // ELIMINAR PERFIL DE USUARIO
   const eliminateProfile = async () => {
     if (
       window.confirm(
-        "Estas seguro?, Esta acción eliminará tu perfil completamente"
+        "Are you sure?, this action will delete your profile completely"
       )
     ) {
       const response = await eliminateUser()
@@ -118,7 +66,7 @@
         if (json) errorStore.setErrors(json.message)
         if (response == "TypeError: Failed to fetch")
           return errorStore.setErrors(
-            "Hay un problema con la conexión con el servidor"
+            "There is a problem connecting to the server"
           )
         return errorStore.setErrors(response.statusText)
       }
@@ -139,20 +87,20 @@
     if (newData.password !== null) {
       if (!validatePassword(newData.password)) {
         return errorStore.setErrors(
-          "Por favor introduzca una contraseña válida"
+          "Please enter a valid password"
         )
       }
     }
 
     if (!validateUsername(newData.username)) {
       return errorStore.setErrors(
-        "Por favor introduzca una nombre de usuario válido"
+        "Please enter a valid username"
       )
     }
 
     if (!validateEmail(newData.email)) {
       return errorStore.setErrors(
-        "Por favor introduzca una direccion de email válida"
+        "Please enter a valid email"
       )
     }
 
@@ -161,7 +109,7 @@
     if (response.status !== 200) {
       if (response == "TypeError: Failed to fetch")
         return errorStore.setErrors(
-          "Hay un problema con la conexión con el servidor"
+          "There is a problem connecting to the server"
         )
       const json = await response.json()
       return errorStore.setErrors(json.message)
@@ -175,33 +123,16 @@
     }
   }
 
-  // CAMBIAR DURACION DE LA COMPROBACION DEL CRAWLER
-  const handleChangeTime = async (id) => {
-    openModal = false
-
-    const response = await changeTime(newTime, id)
-
-    if (response.status !== 200) {
-      if (response.statusText === undefined)
-        return errorStore.setErrors(
-          "Hay un problema con la conexión con el servidor"
-        )
-      return errorStore.setErrors(response.statusText)
-    }
-    if (response.status === 200) {
-      notificationStore.setNotifications(response.statusText)
-      location.reload()
-    }
-  }
   const handleSelect = (e) => {
     newTime = e.detail
   }
-  let openModal = false
-  let newTime
+
 </script>
 
+
+
 <main>
-  <h1>Perfil</h1>
+  <h1>Profile</h1>
   <div class="form-flex">
     <form class="form-horizontal" on:submit={changeProfile} autocomplete="off">
       <div class="form-form">
@@ -276,109 +207,7 @@
       </div>
     </form>
   </div>
-  <div class="btn-select">
-    <button class="btn btn-sm" on:click={handleClick} id="btn-carga"
-      >CHARGE DATA FROM OPERATIONS
-    </button>
 
-    <select id="selector" bind:value={dataTable}
-      >{#each data as dato (dato.id)}
-        <option value={[dato]}>{dato.url.substring(0, 50) + "..."}</option>
-      {:else}
-        <option value={""}>{"NO DATA"}</option>
-      {/each}
-    </select>
-  </div>
-  {#each dataTable as dato (dato.id)}
-    <div class="table-head">
-      <a style="padding-bottom:6px" href={dato.url} target="_blank"
-        >{dato.url.substring(0, 50) + "..."}</a
-      >
-      <select
-        on:change={() => {
-          document.getElementById("modal-id").style.visibility = "visible"
-          openModal = true
-        }}
-      >
-        <option default
-          >Now, it is checked every {dato.time}
-          {dato.time > 1 ? "hours" : "hour"}</option
-        >
-        <option>Change duration</option>
-      </select>
-      <button
-        class="btn  btn-error btn-sm"
-        iconDescription="Eliminar registro y operación del servidor"
-        on:click|preventDefault={eliminateOps(dato.id)}
-        ><i class="fa-solid fa-trash-can" /></button
-      >
-
-      <!-- MODAL CAMBIO DE FRECUENCIA -->
-      <div class={openModal == true ? "modal active" : "modal"} id="modal-id">
-        <div class="modal-container">
-          <div class="modal-header">
-            <a
-              on:click={() => (openModal = false)}
-              class="btn btn-clear float-right"
-              aria-label="Close"
-            />
-            <div class="modal-title h5">Select new checking frecuency</div>
-          </div>
-          <div class="modal-body">
-            <div class="content">
-              <label for="Duracion" />
-              <div id="guardar">
-                <form
-                  class="form-horizontal"
-                  on:submit|preventDefault={handleChangeTime(dato.id)}
-                >
-                  <div class="search-result">
-                    <div class="form-group">
-                      <div class="col-6 col-sm-12">
-                        <select id="select-frecuency" bind:value={newTime}>
-                          <option value="1">1 hour</option>
-                          <option value="2">2 hours</option>
-                          <option value="5">5 hours</option>
-                          <option value="16">16 hours</option>
-                          <option value="24">24 hours</option>
-                        </select>
-                        <button class="guardar-btn btn" type="submit"
-                          >Save</button
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <br />
-    <table class="table ">
-      <thead>
-        <tr>
-          <th>Date // Hour</th>
-          <th>Value</th>
-        </tr>
-      </thead>
-      {#each dato.data as operation}
-        <tbody>
-          <tr class="active">
-            <td>
-              {operation.date.split("T").join(" // ")}
-            </td>
-            <td>
-              {operation.data}
-            </td>
-          </tr>
-        </tbody>
-      {/each}
-      <br />
-    </table>
-  {/each}
 </main>
 
 <style>
