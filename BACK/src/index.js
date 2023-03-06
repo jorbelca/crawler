@@ -39,22 +39,6 @@ const dbOptions = {
 }
 connectMDB()
 
-// const sessionStore = new MongoStore({
-//   mongoUrl: `${MONGO}`,
-//   collectionName: 'sessions'
-// })
-
-// const oneDay = 1000 * 60 * 60 * 24;
-
-
-// app.use(session({
-//   cookie: { sameSite: 'none', maxAge: oneDay, secure: 'auto' },
-//   name: 'smallCrawler',
-//   secret: `${SECRET}`,
-//   store: sessionStore,
-//   saveUninitialized: false,
-//   resave: false,
-// }));
 
 
 app.get('/api/ping', (_request, response) => {

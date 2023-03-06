@@ -1,5 +1,5 @@
 import express from 'express'
-import { urlData } from "../scraper/indexScraper.js";
+import { urlData } from "../scraper/indexScrapper.js";
 import tokenExtractor from '../utils/tokenExtractor.js';
 
 
