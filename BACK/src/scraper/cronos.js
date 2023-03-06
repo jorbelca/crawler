@@ -4,7 +4,7 @@ import { sendNotification } from "../email/nodemailer.js"
 import Operation from "../schemas/operationsSchema.js"
 import User from "../schemas/userSchema.js"
 import getTime from "../utils/getTime.js"
-import { urlData } from "./indexScraper.js"
+import { urlData } from "./indexScrapper.js"
 
 export const mappingOperations = async () => {
   // SACAR TODAS LAS OPERACIONES INDIVIDUALIZADAS DE LA BBD Y MAPEARLAS UNA POR UNA PARA EJECUTAR LA COMPROBACION DE LA HORA
