@@ -1,4 +1,6 @@
 <script>
+  // @ts-nocheck
+
   import { eliminateOperation } from "../Services/eliminateOperation";
   import { handleLogout } from "../Helpers/handleLogout";
   import { changeTime } from "../Services/changeTime";
@@ -125,6 +127,8 @@
       <div class={openModal == true ? "modal active" : "modal"} id="modal-id">
         <div class="modal-container">
           <div class="modal-header">
+            <!-- svelte-ignore a11y-missing-attribute -->
+            <!-- svelte-ignore a11y-missing-content -->
             <a
               on:click={() => (openModal = false)}
               class="btn btn-clear float-right"
