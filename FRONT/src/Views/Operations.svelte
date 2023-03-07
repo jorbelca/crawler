@@ -1,53 +1,53 @@
 <script>
-  import { handleLogout } from "../Helpers/handleLogout.js"
+  import { handleLogout } from "../Helpers/handleLogout.js";
 
-  import { saveUrl, searchUrl } from "../Services/searchService.js"
-  import { notificationStore, errorStore } from "../State/store.js"
+  import { saveUrl, searchUrl } from "../Services/searchService.js";
+  import { notificationStore, errorStore } from "../State/store.js";
 
-  let url = "https://www.amazon.es/dp/B07RPMGKQB/ref=twister_B08ZNPDFTC?th=1"
-  let selectorClass = ".a-offscreen"
-  let time
-  let initialData
+  let url = "https://www.amazon.es/dp/B07RPMGKQB/ref=twister_B08ZNPDFTC?th=1";
+  let selectorClass = ".a-offscreen";
+  let time;
+  let initialData;
 
   // SEARCH
 
   const handleSubmit = async () => {
-    const spinner = document.getElementById("spinner")
-    spinner.style.visibility = "visible"
+    const spinner = document.getElementById("spinner");
+    spinner.style.visibility = "visible";
 
     if (/[a-zA-Z\d]/gm.test(selectorClass[0])) {
-      spinner.style.visibility = "hidden"
+      spinner.style.visibility = "hidden";
       return errorStore.setErrors(
         "Por favor introduce el tipo de selector correctamente"
-      )
+      );
     }
-    const response = await searchUrl(url, selectorClass)
-    const span = document.getElementById("value")
+    const response = await searchUrl(url, selectorClass);
+    const span = document.getElementById("value");
 
     if (Object.keys(response)[0] === "error") {
-      spinner.style.visibility = "hidden"
-      handleLogout()
-      return errorStore.setErrors(response.error)
+      spinner.style.visibility = "hidden";
+      handleLogout();
+      return errorStore.setErrors(response.error);
     }
     if (response === "TypeError: Failed to fetch") {
-      spinner.style.visibility = "hidden"
+      spinner.style.visibility = "hidden";
       return errorStore.setErrors(
         "Hay un problema con la conexión con el servidor"
-      )
+      );
     }
     if (response.response.status === 403 || response.response.status === 404) {
-      spinner.style.visibility = "hidden"
-      return errorStore.setErrors("Fallo en el selector o en la URL")
+      spinner.style.visibility = "hidden";
+      return errorStore.setErrors("Fallo en el selector o en la URL");
     }
     if (Object.keys(response)[0] === "response") {
-      spinner.style.visibility = "hidden"
-      span.innerText = response.response
-      initialData = response.response
-      document.getElementById("guardar").style.visibility = "visible "
+      spinner.style.visibility = "hidden";
+      span.innerText = response.response;
+      initialData = response.response;
+      document.getElementById("guardar").style.visibility = "visible ";
 
       if (Object.keys(response.response).length === 0) {
-        spinner.style.visibility = "hidden"
-        return errorStore.setErrors("No hemos encontrado lo que buscabas")
+        spinner.style.visibility = "hidden";
+        return errorStore.setErrors("No hemos encontrado lo que buscabas");
       }
     }
 
@@ -66,19 +66,19 @@
     //     )
     //   return errorStore.setErrors(response.statusText)
     // }
-  }
+  };
 
   // SAVE
   const handleSave = async () => {
     if (time == undefined || null) {
       errorStore.setErrors(
         "Por favor, seleccione una frecuencia de comprobacion"
-      )
-      return setInterval(() => errorStore.removeErrors(), 3000)
+      );
+      return setInterval(() => errorStore.removeErrors(), 3000);
     }
     if (initialData == undefined || null) {
-      errorStore.setErrors("Por favor, haga una búsqueda válida")
-      return setInterval(() => errorStore.removeErrors(), 3000)
+      errorStore.setErrors("Por favor, haga una búsqueda válida");
+      return setInterval(() => errorStore.removeErrors(), 3000);
     }
 
     const response = await saveUrl(
@@ -86,20 +86,20 @@
       selectorClass,
       Number(time),
       initialData
-    )
+    );
 
     if (response.status === 200) {
-      document.getElementById("guardar").style.visibility = "hidden"
-      notificationStore.setNotifications(response.statusText)
+      document.getElementById("guardar").style.visibility = "hidden";
+      notificationStore.setNotifications(response.statusText);
     }
     if (response.status !== 200) {
       if (response.statusText === undefined)
         return errorStore.setErrors(
           "Hay un problema con la conexión con el servidor"
-        )
-      return errorStore.setErrors(response.statusText)
+        );
+      return errorStore.setErrors(response.statusText);
     }
-  }
+  };
 </script>
 
 <main>
@@ -164,6 +164,7 @@
       </div>
     </form>
   </div>
+ 
 </main>
 
 <style>
