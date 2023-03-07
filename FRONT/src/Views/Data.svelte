@@ -5,9 +5,8 @@
   import { getData } from "../Services/getData";
   import { errorStore, notificationStore } from "../State/store";
 
-  let data = []
-  let dataTable = []
-
+  let data = [];
+  let dataTable = [];
 
   // ELIMINAR SEGUIMIENTO DEL CRAWLER
   const eliminateOps = async (id) => {
@@ -16,76 +15,76 @@
         "Are you sure? This action will delete the tracking data permanently"
       )
     ) {
-      const response = await eliminateOperation(id)
-      const json = await response.json()
+      const response = await eliminateOperation(id);
+      const json = await response.json();
 
       if (response.status !== 200) {
-        if (json) errorStore.setErrors(json.message)
-        return errorStore.setErrors(response.statusText)
+        if (json) errorStore.setErrors(json.message);
+        return errorStore.setErrors(response.statusText);
       }
       if (response.status === 200) {
-        document.getElementById("selector").style.visibility = "hidden "
+        document.getElementById("selector").style.visibility = "hidden ";
 
-        dataTable = []
-        return notificationStore.setNotifications(json.message)
+        dataTable = [];
+        return notificationStore.setNotifications(json.message);
       }
     }
-  }
+  };
 
-const handleClick = async () => {
-    document.getElementById("selector").style.visibility = "visible "
-
-    const res = await getData()
+  const handleClick = async () => {
+    const selector = document.getElementById("selector");
+    selector.style.visibility = "visible";
+    selector.style.width = "100%";
+    const res = await getData();
     if (res == "TypeError: Failed to fetch")
       return errorStore.setErrors(
         "There is a problem connecting to the server"
-      )
-    let response = await res.json()
+      );
+    let response = await res.json();
 
     if (Object.keys(response)[0] === "error") {
-      handleLogout()
-      return errorStore.setErrors(response.error)
+      handleLogout();
+      return errorStore.setErrors(response.error);
     }
-    if (response !== undefined || response.length > 0 || response !== null){
-      data = await response
-
+    if (response !== undefined || response.length > 0 || response !== null) {
+      data = await response;
     }
 
     if (res.status !== 200) {
       if (response == "TypeError: Failed to fetch")
         return errorStore.setErrors(
           "There is a problem connecting to the server"
-        )
-      return errorStore.setErrors(response.statusText)
+        );
+      return errorStore.setErrors(response.statusText);
     }
-  }
+  };
 
-// CAMBIAR DURACION DE LA COMPROBACION DEL CRAWLER
+  // CAMBIAR DURACION DE LA COMPROBACION DEL CRAWLER
   const handleChangeTime = async (id) => {
-    openModal = false
+    openModal = false;
 
-    const response = await changeTime(newTime, id)
+    const response = await changeTime(newTime, id);
 
     if (response.status !== 200) {
       if (response.statusText === undefined)
         return errorStore.setErrors(
           "There is a problem connecting to the server"
-        )
-      return errorStore.setErrors(response.statusText)
+        );
+      return errorStore.setErrors(response.statusText);
     }
     if (response.status === 200) {
-      notificationStore.setNotifications(response.statusText)
-      location.reload()
+      notificationStore.setNotifications(response.statusText);
+      location.reload();
     }
-  }
+  };
 
-  let openModal = false
-  let newTime
+  let openModal = false;
+  let newTime;
 </script>
 
-
 <main>
-<div class="main-data">
+  <h1>DATA</h1>
+  <div class="main-data">
     <button class="btn btn-sm" on:click={handleClick} id="btn-carga"
       >CHARGE DATA FROM OPERATIONS
     </button>
@@ -105,8 +104,8 @@ const handleClick = async () => {
       >
       <select
         on:change={() => {
-          document.getElementById("modal-id").style.visibility = "visible"
-          openModal = true
+          document.getElementById("modal-id").style.visibility = "visible";
+          openModal = true;
         }}
       >
         <option default
@@ -188,11 +187,19 @@ const handleClick = async () => {
       <br />
     </table>
   {/each}
-
 </main>
 
 <style>
-.main-data{
+  h1 {
+    color: goldenrod;
+    text-transform: uppercase;
+    font-size: 2rem;
+    font-weight: 150;
+    line-height: 1.1;
+    margin: 1rem auto;
+    max-width: 14rem;
+  }
+  .main-data {
     display: flex;
     justify-content: center;
     align-items: baseline;
@@ -201,10 +208,15 @@ const handleClick = async () => {
   .main-data#btn-carga {
     font-weight: 100;
   }
+  #selector {
+    visibility: hidden;
+    width: 0;
+  }
   .table-head {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+    margin-top: 20px;
   }
   .table-head > select,
   .table-head > a {
@@ -212,6 +224,16 @@ const handleClick = async () => {
   }
   #modal-id {
     visibility: hidden;
+  }
+  #modal-body {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-items: center;
+  }
+  .form-group {
+    align-items: center;
+    justify-items: center;
   }
   @media (max-width: 770px) {
     h1 {
@@ -221,14 +243,14 @@ const handleClick = async () => {
       display: flex;
       align-self: center;
     }
-    .main-data{
+    .main-data {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       margin-bottom: 20px;
     }
-    .main-data> select {
+    .main-data > select {
       margin-left: 10px;
       margin-right: 10px;
       max-width: 95%;
@@ -245,5 +267,5 @@ const handleClick = async () => {
       justify-items: center;
       align-items: stretch;
     }
-    }
+  }
 </style>
