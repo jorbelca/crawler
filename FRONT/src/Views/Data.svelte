@@ -105,6 +105,7 @@
         >{dato.url.substring(0, 50) + "..."}</a
       >
       <select
+        id="change-duration"
         on:change={() => {
           document.getElementById("modal-id").style.visibility = "visible";
           openModal = true;
@@ -117,6 +118,7 @@
         <option>Change duration</option>
       </select>
       <button
+        id="btn-del"
         class="btn  btn-error btn-sm"
         iconDescription="Eliminar registro y operación del servidor"
         on:click|preventDefault={eliminateOps(dato.id)}
