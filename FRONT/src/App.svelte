@@ -62,7 +62,7 @@
               <Link
                 class="btn btn-link"
                 style="text-decoration:none; color:black"
-                to="/perfil">Profile</Link
+                to="/profile">Profile</Link
               >
 
               <span>
@@ -88,7 +88,7 @@
               <Link
                 class="btn btn-link"
                 style="text-decoration:none; color:black"
-                to="/registro">Register</Link
+                to="/register">Register</Link
               >
             {/if}
           </section>
@@ -105,10 +105,10 @@
         <Route path="/login">
           <Login />
         </Route>
-        <Route path="/registro">
+        <Route path="/register">
           <Register />
         </Route>
-        <Route path="/perfil">
+        <Route path="/profile">
           <Profile />
         </Route>
         <Route path="/ops">

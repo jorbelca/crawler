@@ -111,7 +111,12 @@
         <label class="form-label label-sm " for="url">URL </label>
       </div>
       <div class="col-9 col-sm-12">
-        <input class="form-input input-sm" bind:value={url} type="text" />
+        <input
+          class="form-input input-sm"
+          bind:value={url}
+          type="text"
+          required
+        />
       </div>
     </div>
 
@@ -130,6 +135,7 @@
           class="form-input input-sm"
           bind:value={selectorClass}
           type="text"
+          required
         />
       </div>
     </div>
@@ -164,7 +170,6 @@
       </div>
     </form>
   </div>
- 
 </main>
 
 <style>
