@@ -1,41 +1,43 @@
 <script>
-  import { notificationStore, errorStore } from "../State/store.js"
-  import { navigate } from "svelte-routing"
-  import { registerUser } from "../Services/register.js"
+  import { notificationStore, errorStore } from "../State/store.js";
+  import { navigate } from "svelte-routing";
+  import { registerUser } from "../Services/register.js";
   import {
     validateEmail,
     validatePassword,
     validateUsername,
-  } from "../Helpers/validators.js"
+  } from "../Helpers/validators.js";
 
-  let username = ""
-  let password = ""
-  let email = ""
+  let username = "";
+  let password = "";
+  let email = "";
 
   const handleSubmit = async () => {
     if (!validateEmail(email)) {
-      errorStore.setErrors("Por favor introduzca una direccion de email válida")
+      errorStore.setErrors(
+        "Por favor introduzca una direccion de email válida"
+      );
     }
     if (!validatePassword(password)) {
-      errorStore.setErrors("Por favor introduzca una contraseña válida")
+      errorStore.setErrors("Por favor introduzca una contraseña válida");
     }
     if (!validateUsername(username)) {
-      errorStore.setErrors("Por favor introduzca una nombre de usuario válido")
+      errorStore.setErrors("Por favor introduzca una nombre de usuario válido");
     }
-    const response = await registerUser(email, username, password)
-    console.log(response)
+    const response = await registerUser(email, username, password);
     if (response.status === 200) {
-      notificationStore.setNotifications(response.statusText)
-      return navigate("/login", { replace: true })
+      notificationStore.setNotifications(response.statusText);
+      return navigate("/login", { replace: true });
     }
     if (response.status !== 200) {
+      console.log(response);
       if (response.statusText === undefined)
         return errorStore.setErrors(
           "Hay un problema con la conexión con el servidor"
-        )
-      return errorStore.setErrors(response.statusText)
+        );
+      return errorStore.setErrors(response.statusText);
     }
-  }
+  };
 </script>
 
 <main>
@@ -51,7 +53,8 @@
           class="form-input input-sm"
           bind:value={email}
           type="email"
-          autocomplete="true"
+          autocomplete="false"
+          required
         />
       </div>
     </div>
@@ -65,7 +68,8 @@
           class="form-input input-sm"
           bind:value={username}
           type="text"
-          autocomplete="true"
+          autocomplete="false"
+          required
         />
       </div>
     </div>
@@ -78,8 +82,9 @@
           id="pass"
           class="form-input input-sm"
           bind:value={password}
-          autocomplete="true"
+          autocomplete="false"
           type="password"
+          required
         />
       </div>
     </div>
