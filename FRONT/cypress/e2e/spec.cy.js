@@ -92,20 +92,24 @@ describe("Operate", () => {
   });
 });
 
-describe.skip("Data", () => {
+describe("Data", () => {
   it("Can change the duration of the comprobations and eliminate ", () => {
     window.localStorage.setItem("tokenUser", token);
     cy.visit("http://localhost:3000").contains("Data").click();
-    cy.get("button").contains("CHARGE DATA FROM OPERATIONS").click();
-    cy.get("select#selector").select(operate.url);
+    cy.get("button").contains("CHARGE DATA FROM OPERATIONS").click().wait(300);
+    cy.get("select#selector").select(0);
     cy.contains(operate.price).should("be.visible");
-    cy.get("select").select("Change duration");
-    cy.get("#select").select("1 hour").get("button").contains("Save").click();
-    cy.contains("OK").should("be.visible");
-    cy.get("button").contains("CHARGE DATA FROM OPERATIONS").click();
-    cy.get("select#selector").click().wait(300).select(operate.url);
+    cy.get("select#change-duration").select(1);
+    cy.get("select#select-frecuency")
+      .select(0)
+      .get("button")
+      .contains("Save")
+      .click();
+    // cy.contains("OK").should("be.visible");
+    cy.get("button").contains("CHARGE DATA FROM OPERATIONS").click().wait(300);
+    cy.get("select#selector").select(0);
     cy.contains("Now, it is checked every 1 hour").should("be.visible");
-    cy.get(".btn btn-error btn-sm s-aJ2MPLyHWj-r").click();
+    cy.get("button#btn-del").click();
 
     cy.contains("Erased from the DB").should("be.visible");
   });
@@ -118,7 +122,11 @@ describe("Modify user credentials and delete user", () => {
     cy.contains("Username").type(credentials.username + "a");
     cy.get("button").contains("Change").click();
     cy.contains("OK").should("be.visible");
-    cy.get("input#username::placeholder").contains(credentials.username + "a");
+    cy.get("input#username").should(
+      "have.attr",
+      "placeholder",
+      credentials.username + "a"
+    );
   });
   it("Can eliminate the credentials of a user", () => {
     window.localStorage.setItem("tokenUser", token);
