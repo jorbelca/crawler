@@ -7,7 +7,7 @@ const notificationStr = (() => {
     subscribe,
     setNotifications: (message) => {
       set([message])
-      setInterval(() => set([]), 3000)
+      setInterval(() => set([]), 4000)
       clearInterval()
     },
     removeNotifications: () => { set([]) },
@@ -24,7 +24,7 @@ const errorStr = (() => {
     subscribe,
     setErrors: (error) => {
       set([error])
-      setInterval(() => set([]), 3000),
+      setInterval(() => set([]), 4000),
         clearInterval()
     },
     removeErrors: () => { set([]) }

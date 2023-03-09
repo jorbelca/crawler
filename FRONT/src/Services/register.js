@@ -22,7 +22,7 @@ export const registerUser = async (email, username, password) => {
         Connection: "keep-alive",
       },
     });
-    return response;
+    return response
   } catch (error) {
     console.log(error);
     return error;

@@ -11,12 +11,10 @@
 
   const handleSubmit = async () => {
     if (!validateEmail(email)) {
-      errorStore.setErrors(
-        "Por favor introduzca una direccion de email válida"
-      );
+      errorStore.setErrors("Please introduce a valid email");
     }
     if (!validatePassword(password)) {
-      errorStore.setErrors("Por favor introduzca una contraseña válida");
+      errorStore.setErrors("Please introduce a valid password");
     }
     let response;
     let res;
@@ -35,7 +33,7 @@
     if (response.status !== 200) {
       if (response == "TypeError: Failed to fetch")
         return errorStore.setErrors(
-          "Hay un problema con la conexión con el servidor"
+          "There is a problem connecting to the server"
         );
       errorStore.setErrors(response.statusText);
     }

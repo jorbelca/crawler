@@ -14,28 +14,26 @@
 
   const handleSubmit = async () => {
     if (!validateEmail(email)) {
-      errorStore.setErrors(
-        "Por favor introduzca una direccion de email válida"
-      );
+      return errorStore.setErrors("Please introduce a valid email");
     }
     if (!validatePassword(password)) {
-      errorStore.setErrors("Por favor introduzca una contraseña válida");
+      return errorStore.setErrors("Please introduce a valid password");
     }
     if (!validateUsername(username)) {
-      errorStore.setErrors("Por favor introduzca una nombre de usuario válido");
+      return errorStore.setErrors("Please introduce a valid username");
     }
     const response = await registerUser(email, username, password);
+
     if (response.status === 200) {
       notificationStore.setNotifications(response.statusText);
       return navigate("/login", { replace: true });
     }
     if (response.status !== 200) {
-      console.log(response);
+      if (response.error) return errorStore.setErrors(response.error);
       if (response.statusText === undefined)
         return errorStore.setErrors(
-          "Hay un problema con la conexión con el servidor"
+          " There is a problem connecting to the server"
         );
-      return errorStore.setErrors(response.statusText);
     }
   };
 </script>

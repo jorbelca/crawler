@@ -29,6 +29,7 @@
     }
 
     if (response.status !== 200) {
+      if (response.error) return errorStore.setErrors(response.error);
       if (response.message === "Network Error") {
         return errorStore.setErrors(response.statusText);
       }
@@ -37,9 +38,8 @@
       }
       if (response == "TypeError: Failed to fetch")
         return errorStore.setErrors(
-          "Hay un problema con la conexión con el servidor"
+          "There is a problem with the connection to the server"
         );
-      return errorStore.setErrors(response.statusText);
     }
   });
 
@@ -118,9 +118,9 @@
     }
   };
 
-  const handleSelect = (e) => {
-    newTime = e.detail;
-  };
+  // const handleSelect = (e) => {
+  //   newTime = e.detail;
+  // };
 </script>
 
 <main>
