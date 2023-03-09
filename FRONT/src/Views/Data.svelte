@@ -53,11 +53,12 @@
     }
 
     if (res.status !== 200) {
+      if (response.error) return errorStore.setErrors(response.error);
       if (response == "TypeError: Failed to fetch")
         return errorStore.setErrors(
           "There is a problem connecting to the server"
         );
-      return errorStore.setErrors(response.statusText);
+
     }
   };
 
