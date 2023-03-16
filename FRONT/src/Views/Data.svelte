@@ -13,20 +13,24 @@
   let newTime
 
   onMount(async () => {
+    spinner.style.visibility = "visible"
     const res = await getData()
     if (res == "TypeError: Failed to fetch")
       return errorStore.setErrors("There is a problem connecting to the server")
     let response = await res.json()
 
     if (Object.keys(response)[0] === "error") {
+      spinner.style.visibility = "hidden"
       handleLogout()
       return errorStore.setErrors(response.error)
     }
     if (response !== undefined || response.length > 0 || response !== null) {
+      spinner.style.visibility = "hidden"
       data = await response
     }
 
     if (res.status !== 200) {
+      spinner.style.visibility = "hidden"
       if (response.error) return errorStore.setErrors(response.error)
       if (response == "TypeError: Failed to fetch")
         return errorStore.setErrors(
@@ -86,6 +90,7 @@
 <main>
   <h1>DATA</h1>
   <div class="main-data">
+    <div id="spinner" class="loading loading-lg" />
     <select id="selector" bind:value={dataTable}
       >{#each data as dato (dato.id)}
         <option value={[dato]}>{dato.url.substring(0, 50) + "..."}</option>
@@ -206,7 +211,9 @@
     align-items: baseline;
     margin-top: 20px;
   }
- 
+  #spinner {
+    visibility: hidden;
+  }
   #selector {
     visibility: hidden;
     width: 0;
