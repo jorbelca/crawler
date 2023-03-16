@@ -1,57 +1,55 @@
 <script>
-  import {
-    changeProfileData,
-    getProfileData,
-  } from "../Services/profileUser.js";
-  import { onMount } from "svelte";
-  import { notificationStore, errorStore, userStore } from "../State/store.js";
+  import { changeProfileData, getProfileData } from "../Services/profileUser.js"
+  import { onMount } from "svelte"
+  import { notificationStore, errorStore, userStore } from "../State/store.js"
   import {
     validateEmail,
     validatePassword,
     validateUsername,
-  } from "../Helpers/validators.js";
-  import { eliminateUser } from "../Services/eliminateUser.js";
-  import { navigate } from "svelte-routing";
-  import { handleLogout } from "../Helpers/handleLogout.js";
+  } from "../Helpers/validators.js"
+  import { eliminateUser } from "../Services/eliminateUser.js"
+  import { navigate } from "svelte-routing"
+  import { handleLogout } from "../Helpers/handleLogout.js"
 
-  let username;
-  let email;
+  let username
+  let email
   onMount(async () => {
-    const response = await getProfileData();
-    const json = await response.json();
+    const response = await getProfileData()
+    const json = await response.json()
     if (json) {
-      username = json.username;
-      email = json.email;
+      username = json.username
+      email = json.email
     }
     if (Object.keys(json)[0] === "error") {
-      handleLogout();
-      return errorStore.setErrors(json.error);
+      handleLogout()
+      return errorStore.setErrors(json.error)
     }
 
     if (response.status !== 200) {
-      if (response.error) return errorStore.setErrors(response.error);
+      if (json.error) return errorStore.setErrors(json.error)
+      if (response.error) return errorStore.setErrors(response.error)
       if (response.message === "Network Error") {
-        return errorStore.setErrors(response.statusText);
+        return errorStore.setErrors(response.statusText)
       }
       if (response.status === 404) {
-        return errorStore.setErrors(response.statusText);
+        return errorStore.setErrors(response.statusText)
       }
       if (response == "TypeError: Failed to fetch")
         return errorStore.setErrors(
           "There is a problem with the connection to the server"
-        );
+        )
     }
-  });
+  })
 
-  let newEmail;
-  let newPassword;
-  let newUsername;
+  let newEmail
+  let newPassword
+  let newUsername
 
   const resetForm = () => {
-    newUsername = "";
-    newPassword = "";
-    newEmail = "";
-  };
+    newUsername = ""
+    newPassword = ""
+    newEmail = ""
+  }
 
   // ELIMINAR PERFIL DE USUARIO
   const eliminateProfile = async () => {
@@ -60,63 +58,63 @@
         "Are you sure?, this action will delete your profile completely"
       )
     ) {
-      const response = await eliminateUser();
-      const json = await response.json();
+      const response = await eliminateUser()
+      const json = await response.json()
 
       if (response.status !== 200) {
-        if (json) errorStore.setErrors(json.message);
+        if (json) errorStore.setErrors(json.message)
         if (response == "TypeError: Failed to fetch")
           return errorStore.setErrors(
             "There is a problem connecting to the server"
-          );
-        return errorStore.setErrors(response.statusText);
+          )
+        return errorStore.setErrors(response.statusText)
       }
       if (response.status === 200) {
-        notificationStore.setNotifications(json.message);
-        userStore.removeUser();
-        return navigate("/", { replace: true });
+        notificationStore.setNotifications(json.message)
+        userStore.removeUser()
+        return navigate("/", { replace: true })
       }
     }
-  };
+  }
   // CAMBIAR DATOS PERSONALES DEL PERFIL
   const changeProfile = async () => {
     const newData = {
       username: newUsername || username,
       email: newEmail || email,
       password: newPassword || null,
-    };
+    }
     if (newData.password !== null) {
       if (!validatePassword(newData.password)) {
-        return errorStore.setErrors("Please enter a valid password");
+        return errorStore.setErrors("Please enter a valid password")
       }
     }
 
     if (!validateUsername(newData.username)) {
-      return errorStore.setErrors("Please enter a valid username");
+      return errorStore.setErrors("Please enter a valid username")
     }
 
     if (!validateEmail(newData.email)) {
-      return errorStore.setErrors("Please enter a valid email");
+      return errorStore.setErrors("Please enter a valid email")
     }
 
-    const response = await changeProfileData(newData);
+    const response = await changeProfileData(newData)
 
     if (response.status !== 200) {
       if (response == "TypeError: Failed to fetch")
         return errorStore.setErrors(
           "There is a problem connecting to the server"
-        );
-      const json = await response.json();
-      return errorStore.setErrors(json.message);
+        )
+      const json = await response.json()
+      return errorStore.setErrors(json.message)
     }
-    resetForm();
+    resetForm()
     if (response.status === 200) {
-      username = newData.username;
-      email = newData.email;
+      username = newData.username
+      email = newData.email
 
-      return notificationStore.setNotifications(response.statusText);
+      return notificationStore.setNotifications(response.statusText)
     }
-  };
+  }
 
   // const handleSelect = (e) => {
   //   newTime = e.detail;

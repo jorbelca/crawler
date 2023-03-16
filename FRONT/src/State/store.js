@@ -1,41 +1,38 @@
 import { writable } from "svelte/store"
 
-
-const notificationStr = (() => {
+const notificationStr = () => {
   const { subscribe, set } = writable([])
   return {
     subscribe,
     setNotifications: (message) => {
       set([message])
-      setInterval(() => set([]), 4000)
-      clearInterval()
+      setTimeout(() => set([]), 4000)
     },
-    removeNotifications: () => { set([]) },
+    removeNotifications: () => {
+      set([])
+    },
   }
 }
-)
 
 export const notificationStore = notificationStr()
 
-
-const errorStr = (() => {
+const errorStr = () => {
   const { subscribe, set } = writable([])
   return {
     subscribe,
     setErrors: (error) => {
       set([error])
-      setInterval(() => set([]), 4000),
-        clearInterval()
+      setTimeout(() => set([]), 4000)
     },
-    removeErrors: () => { set([]) }
+    removeErrors: () => {
+      set([])
+    },
   }
 }
-)
 
 export const errorStore = errorStr()
 
-
-const userStr = (() => {
+const userStr = () => {
   const { subscribe, set } = writable([])
   return {
     subscribe,
@@ -50,9 +47,8 @@ const userStr = (() => {
     removeUser: () => {
       set([])
       window.localStorage.removeItem("tokenUser")
-    }
+    },
   }
 }
-)
 
 export const userStore = userStr()

@@ -1,30 +1,31 @@
 <script>
-  import Home from "./Views/Home.svelte";
-  import Login from "./Views/Login.svelte";
-  import Register from "./Views/Register.svelte";
-  import Operations from "./Views/Operations.svelte";
-  import Profile from "./Views/Profile.svelte";
-  import Notifications from "./Components/Notifications.svelte";
-  import { Link, Router, Route } from "svelte-routing";
+  import Home from "./Views/Home.svelte"
+  import Login from "./Views/Login.svelte"
+  import Register from "./Views/Register.svelte"
+  import Operations from "./Views/Operations.svelte"
+  import Profile from "./Views/Profile.svelte"
+  import Notifications from "./Components/Notifications.svelte"
+  import { Link, Router, Route } from "svelte-routing"
 
-  import Footer from "./Components/Footer.svelte";
-  import { userStore } from "./State/store";
-  import { handleLogout } from "./Helpers/handleLogout";
-  import About from "./Views/About.svelte";
-  import Data from "./Views/Data.svelte";
-  import Error from "./Views/Error.svelte";
+  import Footer from "./Components/Footer.svelte"
+  import { userStore } from "./State/store"
+  import { handleLogout } from "./Helpers/handleLogout"
+  import About from "./Views/About.svelte"
+  import Data from "./Views/Data.svelte"
+  import Error from "./Views/Error.svelte"
 
-  const tokenLocal = userStore.getUser();
+  const tokenLocal = userStore.getUser()
 
   if (tokenLocal !== null && tokenLocal.length > 0) {
-    userStore.setUser(tokenLocal);
+    userStore.setUser(tokenLocal)
   } else {
-    handleLogout();
+    handleLogout()
   }
 </script>
 
 <main>
   <div id="page-container">
+    <Notifications />
     <div id="content-wrap">
       <Router>
         <header class="navbar">
@@ -93,8 +94,6 @@
             {/if}
           </section>
         </header>
-
-        <Notifications />
 
         <Route path="/">
           <Home />
@@ -165,8 +164,5 @@
     color: goldenrod;
   }
   @media (max-width: 550px) {
-    .menus {
-      /* flex-direction: column; */
-    }
   }
 </style>

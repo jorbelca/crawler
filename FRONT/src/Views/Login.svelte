@@ -1,43 +1,40 @@
 <script>
-  import { notificationStore, errorStore, userStore } from "../State/store.js";
+  import { notificationStore, errorStore, userStore } from "../State/store.js"
 
-  import { navigate } from "svelte-routing";
+  import { navigate } from "svelte-routing"
 
-  import { loginUser } from "../Services/login";
-  import { validateEmail, validatePassword } from "../Helpers/validators.js";
+  import { loginUser } from "../Services/login"
+  import { validateEmail, validatePassword } from "../Helpers/validators.js"
 
-  let email = "";
-  let password = "";
+  let email = ""
+  let password = ""
 
   const handleSubmit = async () => {
     if (!validateEmail(email)) {
-      errorStore.setErrors("Please introduce a valid email");
+      errorStore.setErrors("Please introduce a valid email")
     }
     if (!validatePassword(password)) {
-      errorStore.setErrors("Please introduce a valid password");
-    }
-    let response;
-    let res;
-    try {
-      response = await loginUser(email, password);
-      if (response.status === 200) res = await response.json();
-    } catch (error) {
-      console.error(error);
+      errorStore.setErrors("Please introduce a valid password")
     }
 
+    const response = await loginUser(email, password)
+    const json = await response.json()
+
     if (response.status === 200) {
-      notificationStore.setNotifications(response.statusText);
-      userStore.setUser(res.token);
-      return navigate("/ops", { replace: true });
+      notificationStore.setNotifications(response.statusText)
+      userStore.setUser(json.token)
+      return navigate("/ops", { replace: true })
     }
     if (response.status !== 200) {
+      
+      if (json.error) return errorStore.setErrors(json.error)
       if (response == "TypeError: Failed to fetch")
         return errorStore.setErrors(
           "There is a problem connecting to the server"
-        );
-      errorStore.setErrors(response.statusText);
+        )
+      errorStore.setErrors(response.statusText)
     }
-  };
+  }
 </script>
 
 <main>
