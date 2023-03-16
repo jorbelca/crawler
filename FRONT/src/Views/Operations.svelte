@@ -43,7 +43,7 @@
     }
     if (Object.keys(response)[0] === "response") {
       spinner.style.visibility = "hidden"
-
+      searchBtn.disabled = false
       span.innerText = response.response
       initialData = response.response
       document.getElementById("guardar").style.visibility = "visible "
