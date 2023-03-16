@@ -1,14 +1,42 @@
 <script>
   // @ts-nocheck
+  import { eliminateOperation } from "../Services/eliminateOperation"
+  import { handleLogout } from "../Helpers/handleLogout"
+  import { changeTime } from "../Services/changeTime"
+  import { getData } from "../Services/getData"
+  import { errorStore, notificationStore } from "../State/store"
+  import { onMount } from "svelte"
 
-  import { eliminateOperation } from "../Services/eliminateOperation";
-  import { handleLogout } from "../Helpers/handleLogout";
-  import { changeTime } from "../Services/changeTime";
-  import { getData } from "../Services/getData";
-  import { errorStore, notificationStore } from "../State/store";
+  let data = []
+  let dataTable = []
+  let openModal = false
+  let newTime
 
-  let data = [];
-  let dataTable = [];
+  onMount(async () => {
+    const res = await getData()
+    if (res == "TypeError: Failed to fetch")
+      return errorStore.setErrors("There is a problem connecting to the server")
+    let response = await res.json()
+
+    if (Object.keys(response)[0] === "error") {
+      handleLogout()
+      return errorStore.setErrors(response.error)
+    }
+    if (response !== undefined || response.length > 0 || response !== null) {
+      data = await response
+    }
+
+    if (res.status !== 200) {
+      if (response.error) return errorStore.setErrors(response.error)
+      if (response == "TypeError: Failed to fetch")
+        return errorStore.setErrors(
+          "There is a problem connecting to the server"
+        )
+    }
+    const selector = document.getElementById("selector")
+    selector.style.visibility = "visible"
+    selector.style.width = "100%"
+  })
 
   // ELIMINAR SEGUIMIENTO DEL CRAWLER
   const eliminateOps = async (id) => {
@@ -17,81 +45,47 @@
         "Are you sure? This action will delete the tracking data permanently"
       )
     ) {
-      const response = await eliminateOperation(id);
-      const json = await response.json();
+      const response = await eliminateOperation(id)
+      const json = await response.json()
 
       if (response.status !== 200) {
-        if (json) errorStore.setErrors(json.message);
-        return errorStore.setErrors(response.statusText);
+        if (json) errorStore.setErrors(json.message)
+        return errorStore.setErrors(response.statusText)
       }
       if (response.status === 200) {
-        document.getElementById("selector").style.visibility = "hidden ";
+        document.getElementById("selector").style.visibility = "hidden "
 
-        dataTable = [];
-        return notificationStore.setNotifications(json.message);
+        dataTable = []
+        return notificationStore.setNotifications(json.message)
       }
     }
-  };
-
-  const handleClick = async () => {
-    const selector = document.getElementById("selector");
-    selector.style.visibility = "visible";
-    selector.style.width = "100%";
-    const res = await getData();
-    if (res == "TypeError: Failed to fetch")
-      return errorStore.setErrors(
-        "There is a problem connecting to the server"
-      );
-    let response = await res.json();
-
-    if (Object.keys(response)[0] === "error") {
-      handleLogout();
-      return errorStore.setErrors(response.error);
-    }
-    if (response !== undefined || response.length > 0 || response !== null) {
-      data = await response;
-    }
-
-    if (res.status !== 200) {
-      if (response.error) return errorStore.setErrors(response.error);
-      if (response == "TypeError: Failed to fetch")
-        return errorStore.setErrors(
-          "There is a problem connecting to the server"
-        );
-
-    }
-  };
+  }
 
   // CAMBIAR DURACION DE LA COMPROBACION DEL CRAWLER
   const handleChangeTime = async (id) => {
-    openModal = false;
+    openModal = false
 
-    const response = await changeTime(newTime, id);
+    const response = await changeTime(newTime, id)
 
     if (response.status !== 200) {
       if (response.statusText === undefined)
         return errorStore.setErrors(
           "There is a problem connecting to the server"
-        );
-      return errorStore.setErrors(response.statusText);
+        )
+      return errorStore.setErrors(response.statusText)
     }
     if (response.status === 200) {
-      notificationStore.setNotifications(response.statusText);
-      location.reload();
+      notificationStore.setNotifications(response.statusText)
+      setTimeout(() => {
+        location.reload()
+      }, 300)
     }
-  };
-
-  let openModal = false;
-  let newTime;
+  }
 </script>
 
 <main>
   <h1>DATA</h1>
   <div class="main-data">
-    <button class="btn btn-sm" on:click={handleClick} id="btn-carga"
-      >CHARGE DATA FROM OPERATIONS
-    </button>
-
     <select id="selector" bind:value={dataTable}
       >{#each data as dato (dato.id)}
         <option value={[dato]}>{dato.url.substring(0, 50) + "..."}</option>
@@ -108,8 +102,8 @@
       <select
         id="change-duration"
         on:change={() => {
-          document.getElementById("modal-id").style.visibility = "visible";
-          openModal = true;
+          document.getElementById("modal-id").style.visibility = "visible"
+          openModal = true
         }}
       >
         <option default
@@ -212,9 +206,7 @@
     align-items: baseline;
     margin-top: 20px;
   }
-  .main-data#btn-carga {
-    font-weight: 100;
-  }
+ 
   #selector {
     visibility: hidden;
     width: 0;
@@ -240,16 +232,13 @@
   }
   .form-group {
     align-items: center;
-    justify-items: center;
+    justify-content: center;
   }
   @media (max-width: 770px) {
     h1 {
       max-width: none;
     }
-    #btn-carga {
-      display: flex;
-      align-self: center;
-    }
+   
     .main-data {
       display: flex;
       flex-direction: column;

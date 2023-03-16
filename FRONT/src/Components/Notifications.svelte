@@ -22,3 +22,9 @@
     </div>
   {/if}
 </main>
+
+<style>
+  .toast {
+    margin-bottom: 30px;
+  }
+</style>

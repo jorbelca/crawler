@@ -1,41 +1,45 @@
 <script>
-  import { notificationStore, errorStore } from "../State/store.js";
-  import { navigate } from "svelte-routing";
-  import { registerUser } from "../Services/register.js";
+  import { notificationStore, errorStore } from "../State/store.js"
+  import { navigate } from "svelte-routing"
+  import { registerUser } from "../Services/register.js"
   import {
     validateEmail,
     validatePassword,
     validateUsername,
-  } from "../Helpers/validators.js";
+  } from "../Helpers/validators.js"
 
-  let username = "";
-  let password = "";
-  let email = "";
+  let username = ""
+  let password = ""
+  let email = ""
 
   const handleSubmit = async () => {
     if (!validateEmail(email)) {
-      return errorStore.setErrors("Please introduce a valid email");
+      return errorStore.setErrors("Please introduce a valid email")
     }
     if (!validatePassword(password)) {
-      return errorStore.setErrors("Please introduce a valid password");
+      return errorStore.setErrors("Please introduce a valid password")
     }
     if (!validateUsername(username)) {
-      return errorStore.setErrors("Please introduce a valid username");
+      return errorStore.setErrors("Please introduce a valid username")
     }
-    const response = await registerUser(email, username, password);
+    const response = await registerUser(email, username, password)
+    const json = await response.json()
 
     if (response.status === 200) {
-      notificationStore.setNotifications(response.statusText);
-      return navigate("/login", { replace: true });
+      notificationStore.setNotifications(response.statusText)
+      return navigate("/login", { replace: true })
     }
     if (response.status !== 200) {
-      if (response.error) return errorStore.setErrors(response.error);
-      if (response.statusText === undefined)
+
+      if (json.error) return errorStore.setErrors(json.error)
+      if (response.error) return errorStore.setErrors(response.error)
+      if (response.statusText === undefined) {
         return errorStore.setErrors(
           " There is a problem connecting to the server"
-        );
+        )
+      }
     }
-  };
+  }
 </script>
 
 <main>
