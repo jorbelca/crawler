@@ -17,13 +17,16 @@
     spinner.style.visibility = "visible"
     searchBtn.disabled = true
 
+    const span = document.getElementById("value")
+    span.innerText = ""
+    document.getElementById("guardar").style.visibility = "hidden"
+
     if (/[a-zA-Z\d]/gm.test(selectorClass[0])) {
       spinner.style.visibility = "hidden"
       searchBtn.disabled = false
       return errorStore.setErrors("Please enter the selector type correctly")
     }
     const response = await searchUrl(url, selectorClass)
-    const span = document.getElementById("value")
 
     if (Object.keys(response)[0] === "error") {
       spinner.style.visibility = "hidden"
@@ -79,8 +82,9 @@
     )
 
     if (response.status === 200) {
+      document.getElementById("value").innerText = ""
       document.getElementById("guardar").style.visibility = "hidden"
-      document.getElementById("value").style.visibility = "hidden"
+
       notificationStore.setNotifications(response.statusText)
     }
     if (response.status !== 200) {
