@@ -61,22 +61,26 @@
               : "navbar-section menus open"}
           >
             <Link
+              on:click={handleToggle}
               class="btn btn-link"
               style="text-decoration:none; color:black"
               to="/">Home</Link
             >
             {#if $userStore.length > 0}
               <Link
+                on:click={handleToggle}
                 class="btn btn-link"
                 style="text-decoration:none; color:black"
                 to="/ops">Operations</Link
               >
               <Link
+                on:click={handleToggle}
                 class="btn btn-link"
                 style="text-decoration:none; color:black"
                 to="/data">Data</Link
               >
               <Link
+                on:click={handleToggle}
                 class="btn btn-link"
                 style="text-decoration:none; color:black"
                 to="/profile">Profile</Link
@@ -97,12 +101,14 @@
               >
             {:else}
               <Link
+                on:click={handleToggle}
                 class="btn btn-link"
                 style="text-decoration:none; color:black"
                 to="/login">Login</Link
               >
 
               <Link
+                on:click={handleToggle}
                 class="btn btn-link"
                 style="text-decoration:none; color:black"
                 to="/register">Register</Link
@@ -187,16 +193,15 @@
   #toggle-btn {
     color: goldenrod;
     border-color: goldenrod;
+    transform: translateY(-60px);
   }
 
   @media (max-width: 450px) {
     section.navbar-section {
-      visibility: hidden;
-      height: 0;
-      width: 0;
+      display: none;
     }
     section.navbar-section.menus.open {
-      visibility: visible;
+      display: block;
       display: flex;
       flex-wrap: nowrap;
       flex-direction: column;
@@ -205,10 +210,14 @@
       margin-top: -60px;
     }
     header.navbar.nav {
-      width: 10%;
+      width: 0%;
+      margin: 0;
+      margin-bottom: -60px;
     }
     header.navbar.nav.open {
       width: 100%;
+      transition: 0.5s;
+      margin-bottom: 0px;
     }
   }
   @media (min-width: 450px) {

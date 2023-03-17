@@ -7,7 +7,7 @@ const credentials = {
 const operate = {
   url: "https://www.amazon.es/dp/B072K3YV79/ref=sspa_dk_detail_5?psc=1&pd_rd_i=B072K3YV79&pd_rd_w=zjiS7&content-id=amzn1.sym.5211011f-e3fb-4d92-b58e-b3527e67ddff&pf_rd_p=5211011f-e3fb-4d92-b58e-b3527e67ddff&pf_rd_r=5DW6WTRJ20BAF054MZBT&pd_rd_wg=Niqpb&pd_rd_r=f597600b-9f63-401a-8800-944d8c3bb72f&s=apparel&sp_csd=d2lkZ2V0TmFtZT1zcF9kZXRhaWw",
   selector: ".a-offscreen",
-  price: "15,98€",
+  price: "16,00€",
 }
 
 let token
@@ -19,6 +19,14 @@ describe("Open", () => {
 })
 
 describe("Register", () => {
+  it("Cannot register a bad user", () => {
+    cy.visit("http://localhost:3000/").contains("Register").click()
+    cy.contains("Email").type("test@test")
+    cy.contains("Username").type(credentials.username)
+    cy.contains("Password").type(credentials.password)
+    cy.get("button").contains("Register").click()
+    cy.contains("Please introduce a valid email").should("be.visible")
+  })
   it("Can register a user", () => {
     cy.visit("http://localhost:3000/").contains("Register").click()
     cy.contains("Email").type(credentials.email)
@@ -79,7 +87,7 @@ describe("Operate", () => {
     cy.contains("URL").get("input:first").clear().type(operate.url)
     cy.contains("Selector").get("input#selector").clear().type(operate.selector)
     cy.get("button").contains("Search").click()
-    cy.wait(5000)
+    cy.wait(3000)
     cy.contains(operate.price).should("be.visible")
     cy.contains("Checking Frequency").get("#select-frecuency").select("2 hours")
     cy.get("button").contains("Save").click()
@@ -90,8 +98,8 @@ describe("Operate", () => {
 describe("Data", () => {
   it("Can change the duration of the comprobations and eliminate ", () => {
     window.localStorage.setItem("tokenUser", token)
-    cy.visit("http://localhost:3000").contains("Data").click()
-    cy.get("select#selector").select(0).wait(300)
+    cy.visit("http://localhost:3000").contains("Data").click().wait(300)
+    cy.get("select#selector").select(0)
     cy.contains(operate.price).should("be.visible")
     cy.get("select#change-duration").select(1)
     cy.get("select#select-frecuency")
@@ -100,7 +108,7 @@ describe("Data", () => {
       .contains("Save")
       .click()
     // cy.contains("OK").should("be.visible");
-    cy.get("button").contains("CHARGE DATA FROM OPERATIONS").click().wait(300)
+    cy.wait(1300)
     cy.get("select#selector").select(0)
     cy.contains("Now, it is checked every 1 hour").should("be.visible")
     cy.get("button#btn-del").click()

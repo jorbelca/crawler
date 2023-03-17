@@ -6,6 +6,7 @@
   import { getData } from "../Services/getData"
   import { errorStore, notificationStore } from "../State/store"
   import { onMount } from "svelte"
+  import Chart from "../Components/Chart.svelte"
 
   let data = []
   let dataTable = []
@@ -13,24 +14,24 @@
   let newTime
 
   onMount(async () => {
-    spinner.style.visibility = "visible"
+    spinner.style.display = "block"
     const res = await getData()
     if (res == "TypeError: Failed to fetch")
       return errorStore.setErrors("There is a problem connecting to the server")
     let response = await res.json()
 
     if (Object.keys(response)[0] === "error") {
-      spinner.style.visibility = "hidden"
+      spinner.style.display = "none"
       handleLogout()
       return errorStore.setErrors(response.error)
     }
     if (response !== undefined || response.length > 0 || response !== null) {
-      spinner.style.visibility = "hidden"
+      spinner.style.display = "none"
       data = await response
     }
 
     if (res.status !== 200) {
-      spinner.style.visibility = "hidden"
+      spinner.style.display = "none"
       if (response.error) return errorStore.setErrors(response.error)
       if (response == "TypeError: Failed to fetch")
         return errorStore.setErrors(
@@ -38,7 +39,7 @@
         )
     }
     const selector = document.getElementById("selector")
-    selector.style.visibility = "visible"
+    selector.style.display = "block"
     selector.style.width = "100%"
   })
 
@@ -85,20 +86,26 @@
       }, 300)
     }
   }
+
+  // MOSTRAR EL CHART
+  let activeChart = false
+  const showChart = () => {
+    activeChart = !activeChart
+  }
 </script>
 
 <main>
   <h1>DATA</h1>
-  <div class="main-data">
-    <div id="spinner" class="loading loading-lg" /></div>
-    <select id="selector" bind:value={dataTable}
-      >{#each data as dato (dato.id)}
-        <option value={[dato]}>{dato.url.substring(0, 50) + "..."}</option>
-      {:else}
-        <option value={""}>{"NO DATA"}</option>
-      {/each}
-    </select>
-  
+
+  <div id="spinner" class="loading loading-lg" />
+  <select id="selector" bind:value={dataTable}
+    >{#each data as dato (dato.id)}
+      <option value={[dato]}>{dato.url.substring(0, 50) + "..."}</option>
+    {:else}
+      <option value={""}>{"NO DATA"}</option>
+    {/each}
+  </select>
+
   {#each dataTable as dato (dato.id)}
     <div class="table-head">
       <a style="padding-bottom:6px" href={dato.url} target="_blank"
@@ -169,7 +176,15 @@
         </div>
       </div>
     </div>
-
+    <!--     
+    <div id="chart-btn">
+      <button class="chart-btn" on:click={showChart}
+        ><i class="fa-solid fa-chart-line" /></button
+      >
+    </div>
+    <div class={!activeChart ? "chart" : "chart active"}>
+      <Chart {data} />
+    </div> -->
     <br />
     <table class="table ">
       <thead>
@@ -212,11 +227,10 @@
     margin-top: 20px;
   }
   #spinner {
-    visibility: hidden;
+    display: none;
   }
   #selector {
-    visibility: hidden;
-    width: 0;
+    display: none;
   }
   .table-head {
     display: flex;
@@ -241,11 +255,17 @@
     align-items: center;
     justify-content: center;
   }
+  .chart {
+    display: none;
+  }
+  .chart.active {
+    display: block;
+  }
   @media (max-width: 770px) {
     h1 {
       max-width: none;
     }
-   
+
     .main-data {
       display: flex;
       flex-direction: column;
@@ -264,7 +284,7 @@
       align-items: center;
     }
   }
-  @media (max-width: 400px) {
+  @media (max-width: 450px) {
     .table-head {
       flex-direction: column;
       justify-items: center;

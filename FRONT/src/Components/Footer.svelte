@@ -1,6 +1,6 @@
 <script></script>
 
-<main>
+<div>
   <footer class="footer">
     <div class="content is-flex is-align-items-center is-flex-direction-column">
       <div class="text-tiny">
@@ -11,7 +11,7 @@
       </div>
     </div>
   </footer>
-</main>
+</div>
 
 <style>
   footer.footer {
