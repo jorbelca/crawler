@@ -21,6 +21,12 @@
   } else {
     handleLogout()
   }
+
+  let menuResponsive = false
+
+  const handleToggle = () => {
+    menuResponsive = !menuResponsive
+  }
 </script>
 
 <main>
@@ -41,9 +47,19 @@
             </div>
           </section>
         </header>
-        <header class="navbar">
+        <header class={!menuResponsive ? "navbar nav" : "navbar nav open"}>
           <!-- DERECHA -->
-          <section class="navbar-section menus">
+          <button
+            id="toggle-btn"
+            class="btn btn-action"
+            on:click|preventDefault={handleToggle}
+            ><i class="icon icon-menu" /></button
+          >
+          <section
+            class={!menuResponsive
+              ? "navbar-section menus"
+              : "navbar-section menus open"}
+          >
             <Link
               class="btn btn-link"
               style="text-decoration:none; color:black"
@@ -144,6 +160,7 @@
     margin-top: -20px;
     flex-wrap: wrap;
     font-weight: 150;
+    width: 100%;
   }
   #page-container {
     position: relative;
@@ -163,6 +180,41 @@
     font-weight: 200;
     color: goldenrod;
   }
-  @media (max-width: 550px) {
+  .navbar .navbar-section:not(:first-child):last-child {
+    justify-content: space-evenly;
+  }
+
+  #toggle-btn {
+    color: goldenrod;
+    border-color: goldenrod;
+  }
+
+  @media (max-width: 450px) {
+    section.navbar-section {
+      visibility: hidden;
+      height: 0;
+      width: 0;
+    }
+    section.navbar-section.menus.open {
+      visibility: visible;
+      display: flex;
+      flex-wrap: nowrap;
+      flex-direction: column;
+      height: 100%;
+      width: 100%;
+      margin-top: -60px;
+    }
+    header.navbar.nav {
+      width: 10%;
+    }
+    header.navbar.nav.open {
+      width: 100%;
+    }
+  }
+  @media (min-width: 450px) {
+    #toggle-btn {
+      display: none;
+      width: 0px;
+    }
   }
 </style>

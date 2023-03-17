@@ -90,7 +90,7 @@
 <main>
   <h1>DATA</h1>
   <div class="main-data">
-    <div id="spinner" class="loading loading-lg" />
+    <div id="spinner" class="loading loading-lg" /></div>
     <select id="selector" bind:value={dataTable}
       >{#each data as dato (dato.id)}
         <option value={[dato]}>{dato.url.substring(0, 50) + "..."}</option>
@@ -98,7 +98,7 @@
         <option value={""}>{"NO DATA"}</option>
       {/each}
     </select>
-  </div>
+  
   {#each dataTable as dato (dato.id)}
     <div class="table-head">
       <a style="padding-bottom:6px" href={dato.url} target="_blank"
