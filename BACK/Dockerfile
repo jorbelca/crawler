@@ -7,7 +7,7 @@ ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 
 ENV NODE_OPTIONS="--max-old-space-size=8192"
 
-WORKDIR /usr/src
+WORKDIR /usr/src/app
 
 COPY package*.json ./
 
