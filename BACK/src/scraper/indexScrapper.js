@@ -8,20 +8,20 @@ import { executablePath } from "puppeteer"
 export const urlData = async function run(url, selector) {
   // const urlHost = await transformURL(url)
   // { urlHost !== undefined ? urlHost : '' }
+  const browser = await puppeteer.launch({
+    headless: true,
+    executablePath:
+      process.env.NODE_ENV === "production"
+        ? process.env.PUPPETEER_EXECUTABLE_PATH
+        : executablePath(),
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--single-process",
+      "--no-zygote",
+    ],
+  })
   try {
-    const browser = await puppeteer.launch({
-      headless: true,
-      executablePath:
-        process.env.NODE_ENV === "production"
-          ? process.env.PUPPETEER_EXECUTABLE_PATH
-          : executablePath(),
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--single-process",
-        "--no-zygote",
-      ],
-    })
     const page = await browser.newPage()
 
     await page.goto(url)
@@ -30,11 +30,13 @@ export const urlData = async function run(url, selector) {
 
     const html = await page.$eval(selector, (el) => el.innerText)
 
-    await browser.close()
+    
     return html
   } catch (error) {
     console.log(error)
     return error
+  }finally{
+    await browser.close()
   }
 }
 
