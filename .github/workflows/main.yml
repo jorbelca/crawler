@@ -12,4 +12,4 @@ jobs:
     steps:
       - name: cURL request
         # Hit the webhook endpoint to rebuild  from the "main" branch
-        run: curl -X GET -d https://crawler-2a5f.onrender.com/api/ping
+        run: curl -X GET https://crawler-2a5f.onrender.com/api/ping
