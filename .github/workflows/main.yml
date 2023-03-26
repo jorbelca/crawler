@@ -3,8 +3,8 @@ name: Trigger Site to not sleep
 
 on:
   schedule:
-    # Runs "at every minute"
-    - cron: '* * * * *'
+    # Runs "at every five minutes"
+    - cron: '*/5 * * * *'
 jobs:
   build:
     name: Trigger Site 
