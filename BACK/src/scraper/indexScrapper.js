@@ -23,7 +23,11 @@ export const urlData = async function run(url, selector) {
     await page.setViewport({ width: 1080, height: 1024 })
     await page.waitForSelector("body", 5000)
 
-    const html = await page.$eval(selector, (el) => el.innerText)
+    const html = await page.$eval(
+      selector,
+      (el) => el.innerText,
+      await page.$("body")
+    )
 
     console.log(html)
     return html
