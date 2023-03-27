@@ -59,7 +59,7 @@ function connectDB() {
   let URL = MONGO;
   if (NODE_ENV === "test") URL = MONGO_TEST;
   // CONECTAR MONGODB
-  console.log(URL);
+
   try {
     mongoose.connect(`${URL}`, dbOptions);
     console.log("Connected To MongoDB");
