@@ -14,12 +14,7 @@ export const urlData = async function run(url, selector) {
       process.env.NODE_ENV === "production"
         ? process.env.PUPPETEER_EXECUTABLE_PATH
         : executablePath(),
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--single-process",
-      "--no-zygote",
-    ],
+    args: ["--no-sandbox", "--disable-setuid-sandbox", "--no-zygote"],
   })
   try {
     const page = await browser.newPage()
@@ -30,12 +25,12 @@ export const urlData = async function run(url, selector) {
 
     const html = await page.$eval(selector, (el) => el.innerText)
 
-    
+    console.log(html)
     return html
   } catch (error) {
     console.log(error)
     return error
-  }finally{
+  } finally {
     await browser.close()
   }
 }
