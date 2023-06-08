@@ -19,7 +19,9 @@ export const urlData = async function run(url, selector) {
   try {
     const page = await browser.newPage()
 
-    await page.goto(url)
+    await page.goto(url, {
+      waitUntil: "load",
+    })
     await page.setViewport({ width: 1080, height: 1024 })
     await page.waitForSelector("body", 5000)
 
@@ -29,7 +31,6 @@ export const urlData = async function run(url, selector) {
       await page.$("body")
     )
 
-    console.log(html)
     return html
   } catch (error) {
     console.log(error)
