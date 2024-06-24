@@ -1,127 +1,94 @@
 <script>
-  export let data
-  import {
-    line,
-    curveStep,
-    timeParse,
-    scaleLinear,
-    extent,
-    scaleTime,
-  } from "d3"
+  export let data;
+  import * as d3 from "d3";
+  import { onMount } from "svelte";
 
-  let el
+  let el;
 
-  const monthNames = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ]
+  let xScale = d3.scaleTime();
+  let yScale = d3.scaleLinear().domain([0, 20]);
+  let width;
+  let height;
 
-  let width = 800
-  let height = 300
-  let margin = { top: 20, bottom: 20, left: 20, right: 20 }
+  const margin = {
+    top: 20,
+    right: 20,
+    bottom: 30,
+    left: 30,
+  };
 
-  let allData = data[0].data
+  onMount(() => {
+    redraw();
+    // window.addEventListener("resize", redraw)
+  });
 
-  // scales
-  let extentX = extent(allData, (d) => d.date)
-  let xScale = scaleLinear()
-    .domain(extentX)
-    .range([margin.left, width - margin.right])
+  function redraw() {
+    // empty el div
+    d3.select("#el");
+    // determine width & height of parent element and subtract the margin
+    width =
+      d3.select(el).node().getBoundingClientRect().width -
+      margin.left -
+      margin.right;
+    height =
+      d3.select(el).node().getBoundingClientRect().height -
+      margin.top -
+      margin.bottom;
 
-  let extentY = extent(allData, (d) => d.data)
-  let yScale = scaleLinear()
-    .domain(extentY)
-    .range([height - margin.bottom, margin.top])
+    // init scales according to new width & height
+    xScale.range([0, width]);
+    yScale.range([height, 0]);
+    // Construct line
+    const line = d3.line();
 
-  let path = line()
-    .x((d) => xScale(d.date))
-    .y((d) => yScale(d.data))
-    .curve(curveStep)
+    // create svg and create a group inside that is moved by means of margin
+    const svg = d3
+      .select(el)
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${[margin.left, margin.top]})`);
 
-  console.log(path)
-  // ticks for x axis - first day of each month found in the data
-  let xTicks = []
-  allData.forEach((d) => {
-    // d.date = Date.parse(d.date)
-    // d.date = timeParse("%Y%m%dT%H:%M:%S")(d.date)
-    // if (d.date.getDate() == 1) {
-    //   xTicks.push(d.date)
-    // }
-    xTicks.push(d.date)
-  })
+    // draw x and y axes
+    svg
+      .append("g")
+      .attr("transform", `translate(${[0, height]})`)
+      .call(d3.axisBottom(xScale));
+    svg.append("g").call(d3.axisLeft(yScale));
 
-  // x axis labels string formatting
-  // let xLabel = (x) => {
-  //   console.log(x)
-  //   monthNames[x.getMonth()] +
-  //     " 20" +
-  //     x.getYear().toString().substring(x.getYear(), 1)
-  // }
-
-  // y ticks count to label by 5's
-  let yTicks = []
-  allData.forEach((d) => {
-    yTicks.push(d.data)
-  })
-
-  // d's for axis paths
-  let xPath = `M${margin.left + 0.5},6V0H${width - margin.right + 1}V6`
-  let yPath = `M-6,${height + 0.5}H0.5V0.5H-6`
+    // draw data points
+    svg
+      .append("g")
+      .selectAll("circle")
+      .data(data[0].data)
+      .enter()
+      .append("circle")
+      .attr("cx", function (d) {
+        console.log(d.data);
+        return xScale(new Date(d.date));
+      })
+      .attr("cy", function (d) {
+        return yScale(d.data);
+      })
+      .attr("d", line(7))
+      .style("fill", "#ff3e00")
+      .style("fill-opacity", "0.5")
+      .style("stroke", "#ff3e00");
+  }
+  console.log(data[0].data);
 </script>
 
 <div>
   <h1>CHART</h1>
-  <svg bind:this={el} transform="translate({margin.left}, {margin.top})">
-    <g>
-      <!-- line -->
-      <path d={path(allData)} fill="none" stroke="blue" />
-    </g>
-
-    <!-- y axis -->
-    <g transform="translate({margin.left}, 0)">
-      <path stroke="currentColor" d={yPath} fill="none" />
-
-      {#each yTicks as y}
-        <g class="tick" opacity="1" transform="translate(0,100)">
-          <line stroke="currentColor" x2="-5" />
-          <text dy="0.32em" fill="currentColor" x="-{margin.left}">
-            {y}
-          </text>
-        </g>
-      {/each}
-    </g>
-
-    <!-- x axis -->
-    <g transform="translate(0, {height})">
-      <path stroke="currentColor" d={xPath} fill="none" />
-
-      {#each xTicks as x}
-        <g class="tick" opacity="1" transform="translate(100,0)">
-          <line stroke="currentColor" y2="6" />
-          <text fill="currentColor" y="9" dy="0.71em" x="-{margin.left}">
-            <!-- {xLabel(x)} -->
-          </text>
-        </g>
-      {/each}
-    </g>
-  </svg>
+  <div bind:this={el} class="chart" id="el" />
 </div>
 
 <style>
   div {
     height: 100%;
   }
-  svg {
+  #el {
     width: 100%;
     height: 100%;
   }

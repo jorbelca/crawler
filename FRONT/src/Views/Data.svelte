@@ -1,47 +1,49 @@
 <script>
   // @ts-nocheck
-  import { eliminateOperation } from "../Services/eliminateOperation"
-  import { handleLogout } from "../Helpers/handleLogout"
-  import { changeTime } from "../Services/changeTime"
-  import { getData } from "../Services/getData"
-  import { errorStore, notificationStore } from "../State/store"
-  import { onMount } from "svelte"
-  import Chart from "../Components/Chart.svelte"
+  import { eliminateOperation } from "../Services/eliminateOperation";
+  import { handleLogout } from "../Helpers/handleLogout";
+  import { changeTime } from "../Services/changeTime";
+  import { getData } from "../Services/getData";
+  import { errorStore, notificationStore } from "../State/store";
+  import { onMount } from "svelte";
+  import Chart from "../Components/Chart.svelte";
 
-  let data = []
-  let dataTable = []
-  let openModal = false
-  let newTime
+  let data = [];
+  let dataTable = [];
+  let openModal = false;
+  let newTime;
 
   onMount(async () => {
-    spinner.style.display = "block"
-    const res = await getData()
+    spinner.style.display = "block";
+    const res = await getData();
     if (res == "TypeError: Failed to fetch")
-      return errorStore.setErrors("There is a problem connecting to the server")
-    let response = await res.json()
+      return errorStore.setErrors(
+        "There is a problem connecting to the server"
+      );
+    let response = await res.json();
 
     if (Object.keys(response)[0] === "error") {
-      spinner.style.display = "none"
-      handleLogout()
-      return errorStore.setErrors(response.error)
+      spinner.style.display = "none";
+      handleLogout();
+      return errorStore.setErrors(response.error);
     }
     if (response !== undefined || response.length > 0 || response !== null) {
-      spinner.style.display = "none"
-      data = await response
+      spinner.style.display = "none";
+      data = await response;
     }
 
     if (res.status !== 200) {
-      spinner.style.display = "none"
-      if (response.error) return errorStore.setErrors(response.error)
+      spinner.style.display = "none";
+      if (response.error) return errorStore.setErrors(response.error);
       if (response == "TypeError: Failed to fetch")
         return errorStore.setErrors(
           "There is a problem connecting to the server"
-        )
+        );
     }
-    const selector = document.getElementById("selector")
-    selector.style.display = "block"
-    selector.style.width = "100%"
-  })
+    const selector = document.getElementById("selector");
+    selector.style.display = "block";
+    selector.style.width = "100%";
+  });
 
   // ELIMINAR SEGUIMIENTO DEL CRAWLER
   const eliminateOps = async (id) => {
@@ -50,48 +52,48 @@
         "Are you sure? This action will delete the tracking data permanently"
       )
     ) {
-      const response = await eliminateOperation(id)
-      const json = await response.json()
+      const response = await eliminateOperation(id);
+      const json = await response.json();
 
       if (response.status !== 200) {
-        if (json) errorStore.setErrors(json.message)
-        return errorStore.setErrors(response.statusText)
+        if (json) errorStore.setErrors(json.message);
+        return errorStore.setErrors(response.statusText);
       }
       if (response.status === 200) {
-        document.getElementById("selector").style.visibility = "hidden "
+        document.getElementById("selector").style.visibility = "hidden ";
 
-        dataTable = []
-        return notificationStore.setNotifications(json.message)
+        dataTable = [];
+        return notificationStore.setNotifications(json.message);
       }
     }
-  }
+  };
 
   // CAMBIAR DURACION DE LA COMPROBACION DEL CRAWLER
   const handleChangeTime = async (id) => {
-    openModal = false
+    openModal = false;
 
-    const response = await changeTime(newTime, id)
+    const response = await changeTime(newTime, id);
 
     if (response.status !== 200) {
       if (response.statusText === undefined)
         return errorStore.setErrors(
           "There is a problem connecting to the server"
-        )
-      return errorStore.setErrors(response.statusText)
+        );
+      return errorStore.setErrors(response.statusText);
     }
     if (response.status === 200) {
-      notificationStore.setNotifications(response.statusText)
+      notificationStore.setNotifications(response.statusText);
       setTimeout(() => {
-        location.reload()
-      }, 300)
+        location.reload();
+      }, 300);
     }
-  }
+  };
 
   // MOSTRAR EL CHART
-  let activeChart = false
+  let activeChart = false;
   const showChart = () => {
-    activeChart = !activeChart
-  }
+    activeChart = !activeChart;
+  };
 </script>
 
 <main>
@@ -114,8 +116,8 @@
       <select
         id="change-duration"
         on:change={() => {
-          document.getElementById("modal-id").style.visibility = "visible"
-          openModal = true
+          document.getElementById("modal-id").style.visibility = "visible";
+          openModal = true;
         }}
       >
         <option default
@@ -126,7 +128,7 @@
       </select>
       <button
         id="btn-del"
-        class="btn  btn-error btn-sm"
+        class="btn btn-error btn-sm"
         iconDescription="Eliminar registro y operación del servidor"
         on:click|preventDefault={eliminateOps(dato.id)}
         ><i class="fa-solid fa-trash-can" /></button
@@ -176,7 +178,7 @@
         </div>
       </div>
     </div>
-<!-- 
+    <!--     
     <div id="chart-btn">
       <button class="chart-btn" on:click={showChart}
         ><i class="fa-solid fa-chart-line" /></button
@@ -186,7 +188,7 @@
       <Chart {data} />
     </div> -->
     <br />
-    <table class="table ">
+    <table class="table">
       <thead>
         <tr>
           <th>Date // Hour</th>
