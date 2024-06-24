@@ -1,3 +1,6 @@
 BACK/.env
 .env
 FRONT/.env
+FRONT/node_modules
+BACK/node_modules
+FRONT/cypress/screenshots
