@@ -18,7 +18,11 @@ import { cronoScraper } from "./scraper/cronos.js";
 import changeTimeRouter from "./routes/changeTimeRoutes.js";
 
 const corsOptions = {
-  origin: ["https://thesmallcrawler.vercel.app", "http://localhost:3000"],
+  origin: [
+    "https://thesmallcrawler.vercel.app",
+    "http://localhost:3000",
+    "http://localhost:5173",
+  ],
   optionsSuccessStatus: 204,
 };
 
