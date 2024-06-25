@@ -78,16 +78,8 @@ http.createServer(app).listen(PORT, function () {
   cronoScraper();
 });
 
-
-
 // import { refreshAccessToken } from "./email/testRefreshToken.js";
 
 // refreshAccessToken()
-//   .then((newAccessToken) => {
-//     console.log("Successfully refreshed access token:", newAccessToken);
-//   })
-//   .catch((error) => {
-//     console.error("Failed to refresh access token:", error);
-//   });
 
 //https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/gmail.readonly&access_type=offline&include_granted_scopes=true&response_type=code&redirect_uri=https://developers.google.com/oauthplayground&client_id=281193722337-euipk1h65n00ecgggaaifjb92o8onirs.apps.googleusercontent.com

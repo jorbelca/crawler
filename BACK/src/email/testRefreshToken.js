@@ -2,9 +2,7 @@ import axios from "axios";
 import {
   MAIL_CLIENT_ID,
   MAIL_CLIENT_SECRET,
-  MAIL_PASSWORD,
   MAIL_REFRESH_TOKEN,
-  MAIL_USERNAME,
 } from "../../configEnv.js";
 
 // Asignar Variables
