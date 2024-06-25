@@ -22,7 +22,7 @@ describe("Open", () => {
 
 describe("Register", () => {
   it("Cannot register a bad user", () => {
-    cy.visit("http://localhost:3000/").contains("Register").click();
+    cy.visit(url).contains("Register").click();
     cy.contains("Email").type("test@test");
     cy.contains("Username").type(credentials.username);
     cy.contains("Password").type(credentials.password);
@@ -30,7 +30,7 @@ describe("Register", () => {
     cy.contains("Please introduce a valid email").should("be.visible");
   });
   it("Can register a user", () => {
-    cy.visit("http://localhost:3000/").contains("Register").click();
+    cy.visit(url).contains("Register").click();
     cy.contains("Email").type(credentials.email);
     cy.contains("Username").type(credentials.username);
     cy.contains("Password").type(credentials.password);
@@ -40,14 +40,14 @@ describe("Register", () => {
 
 describe("Login", () => {
   it("Cannot login a user with wrong credentials", () => {
-    cy.visit("http://localhost:3000/").contains("Login").click();
+    cy.visit(url).contains("Login").click();
     cy.contains("Email").type("wrong@email.com");
     cy.contains("Password").type("wrong");
     cy.get("button").contains("Log In").click();
     cy.contains("No data in the DB").should("be.visible");
   });
   it("Can login a user", () => {
-    cy.visit("http://localhost:3000/").contains("Login").click();
+    cy.visit(url).contains("Login").click();
     cy.contains("Email").type(credentials.email);
     cy.contains("Password").type(credentials.password);
     cy.get("button").contains("Log In").click();
@@ -77,14 +77,14 @@ describe("Login", () => {
 describe("Error", () => {
   it("Cannot visit a page that not exists", () => {
     window.localStorage.setItem("tokenUser", token);
-    cy.visit("http://localhost:3000/credent");
+    cy.visit(`${url}/credent`);
     cy.contains("Error 404 -- Not Found").should("be.visible");
   });
 });
 describe("Operate", () => {
   it("Can operate a search", () => {
     window.localStorage.setItem("tokenUser", token);
-    cy.visit("http://localhost:3000/ops");
+    cy.visit(`${url}/credent`);
 
     cy.contains("URL").get("input:first").clear().type(operate.url);
     cy.contains("Selector")
@@ -105,7 +105,7 @@ describe("Operate", () => {
 describe("Data", () => {
   it("Can change the duration of the comprobations and eliminate ", () => {
     window.localStorage.setItem("tokenUser", token);
-    cy.visit("http://localhost:3000").contains("Data").click().wait(300);
+    cy.visit(url).contains("Data").click().wait(300);
     cy.get("select#selector").select(0);
     cy.contains(operate.price).should("be.visible");
     cy.get("select#change-duration").select(1);
@@ -127,7 +127,7 @@ describe("Data", () => {
 describe("Modify user credentials and delete user", () => {
   it("Can change the credentials of a user", () => {
     window.localStorage.setItem("tokenUser", token);
-    cy.visit("http://localhost:3000").contains("Profile").click();
+    cy.visit(url).contains("Profile").click();
     cy.contains("Username").type(credentials.username + "a");
     cy.get("button").contains("Change").click();
     cy.contains("OK").should("be.visible");
@@ -139,7 +139,7 @@ describe("Modify user credentials and delete user", () => {
   });
   it("Can eliminate the credentials of a user", () => {
     window.localStorage.setItem("tokenUser", token);
-    cy.visit("http://localhost:3000").contains("Profile").click();
+    cy.visit(url).contains("Profile").click();
     cy.get("button").contains("Eliminate Account").click();
 
     cy.contains("Erased from the DB").should("be.visible");

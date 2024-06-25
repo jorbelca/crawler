@@ -25,8 +25,10 @@
     "mongoose-validator": "^2.1.0",
     "nodemailer": "^6.9.3",
     "path": "^0.12.7",
-    "puppeteer": "^20.5.0",
+    "puppeteer": "^22.12.0",
     "puppeteer-extra": "^3.3.6",
-    "puppeteer-extra-plugin-stealth": "^2.11.2"
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "validator": "^13.12.0",
+    "ws": "^8.17.1"
   }
 }

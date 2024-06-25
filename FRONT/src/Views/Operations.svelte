@@ -1,77 +1,80 @@
 <script>
-  import { handleLogout } from "../Helpers/handleLogout.js"
+  import { handleLogout } from "../Helpers/handleLogout.js";
 
-  import { saveUrl, searchUrl } from "../Services/searchService.js"
-  import { notificationStore, errorStore } from "../State/store.js"
+  import { saveUrl, searchUrl } from "../Services/searchService.js";
+  import { notificationStore, errorStore } from "../State/store.js";
 
-  let url = "https://www.amazon.es/dp/B07RPMGKQB/ref=twister_B08ZNPDFTC?th=1"
-  let selectorClass = ".a-offscreen"
-  let time = "24"
-  let initialData
+  let url =
+    "https://www.amazon.es/AmazonBasics-recargables-precargadas-cubierta-exterior/dp/B00CWNMXQW/ref=pd_day0_d_sccl_3_3/262-6203639-6586141?pd_rd_w=oBdd8&content-id=amzn1.sym.ba6ffc34-ede0-4f68-807d-781b785733b1&pf_rd_p=ba6ffc34-ede0-4f68-807d-781b785733b1&pf_rd_r=2TZQCA006C63P4ZB8X0T&pd_rd_wg=EQRAL&pd_rd_r=a4c25110-d319-4e2a-b3b5-5c2103f4caaa&pd_rd_i=B00CWNMXQW&psc=1";
+  let selectorClass = ".a-offscreen";
+  let time = "24";
+  let initialData;
 
   // SEARCH
 
   const handleSubmit = async () => {
-    const spinner = document.getElementById("spinner")
-    const searchBtn = document.getElementById("buscar-btn")
-    spinner.style.visibility = "visible"
-    searchBtn.disabled = true
+    const spinner = document.getElementById("spinner");
+    const searchBtn = document.getElementById("buscar-btn");
+    spinner.style.visibility = "visible";
+    searchBtn.disabled = true;
 
-    const span = document.getElementById("value")
-    span.innerText = ""
-    document.getElementById("guardar").style.visibility = "hidden"
+    const span = document.getElementById("value");
+    span.innerText = "";
+    document.getElementById("guardar").style.visibility = "hidden";
 
     if (/[a-zA-Z\d]/gm.test(selectorClass[0])) {
-      spinner.style.visibility = "hidden"
-      searchBtn.disabled = false
-      return errorStore.setErrors("Please enter the selector type correctly")
+      spinner.style.visibility = "hidden";
+      searchBtn.disabled = false;
+      return errorStore.setErrors("Please enter the selector type correctly");
     }
-    const response = await searchUrl(url, selectorClass)
+    const response = await searchUrl(url, selectorClass);
 
     if (Object.keys(response)[0] === "error") {
-      spinner.style.visibility = "hidden"
-      searchBtn.disabled = false
-      handleLogout()
-      return errorStore.setErrors(response.error)
+      spinner.style.visibility = "hidden";
+      searchBtn.disabled = false;
+      handleLogout();
+      return errorStore.setErrors(response.error);
     }
     if (response === "TypeError: Failed to fetch") {
-      spinner.style.visibility = "hidden"
-      searchBtn.disabled = false
-      return errorStore.setErrors("There is a problem connecting to the server")
+      spinner.style.visibility = "hidden";
+      searchBtn.disabled = false;
+      return errorStore.setErrors(
+        "There is a problem connecting to the server"
+      );
     }
     if (response.response.status === 403 || response.response.status === 404) {
-      spinner.style.visibility = "hidden"
-      searchBtn.disabled = false
-      return errorStore.setErrors("Error in the selector or in the URL")
+      spinner.style.visibility = "hidden";
+      searchBtn.disabled = false;
+      return errorStore.setErrors("Error in the selector or in the URL");
     }
     if (Object.keys(response)[0] === "response") {
-      spinner.style.visibility = "hidden"
-      searchBtn.disabled = false
-      span.innerText = response.response
-      initialData = response.response
-      document.getElementById("guardar").style.visibility = "visible "
+      spinner.style.visibility = "hidden";
+      searchBtn.disabled = false;
+      span.innerText = response.response;
+      initialData = response.response;
+      document.getElementById("guardar").style.visibility = "visible ";
 
       if (Object.keys(response.response).length === 0) {
-        spinner.style.visibility = "hidden"
-        searchBtn.disabled = false
+        spinner.style.visibility = "hidden";
+        searchBtn.disabled = false;
         return errorStore.setErrors(
           "We have not found what you were looking for"
-        )
+        );
       }
     }
-  }
+  };
 
   // SAVE
   const handleSave = async () => {
     if (time == undefined || null) {
       errorStore.setErrors(
         "Por favor, seleccione una frecuencia de comprobacion"
-      )
-      return setTimeout(() => errorStore.removeErrors(), 3000)
+      );
+      return setTimeout(() => errorStore.removeErrors(), 3000);
     }
     if (initialData == undefined || null) {
-      errorStore.setErrors("Por favor, haga una búsqueda válida")
-      return setTimeout(() => errorStore.removeErrors(), 3000)
+      errorStore.setErrors("Por favor, haga una búsqueda válida");
+      return setTimeout(() => errorStore.removeErrors(), 3000);
     }
 
     const response = await saveUrl(
@@ -79,22 +82,22 @@
       selectorClass,
       Number(time),
       initialData
-    )
+    );
 
     if (response.status === 200) {
-      document.getElementById("value").innerText = ""
-      document.getElementById("guardar").style.visibility = "hidden"
+      document.getElementById("value").innerText = "";
+      document.getElementById("guardar").style.visibility = "hidden";
 
-      notificationStore.setNotifications(response.statusText)
+      notificationStore.setNotifications(response.statusText);
     }
     if (response.status !== 200) {
       if (response.statusText === undefined)
         return errorStore.setErrors(
           "Hay un problema con la conexión con el servidor"
-        )
-      return errorStore.setErrors(response.statusText)
+        );
+      return errorStore.setErrors(response.statusText);
     }
-  }
+  };
 </script>
 
 <main>
@@ -103,7 +106,7 @@
   <form class="form-horizontal" on:submit|preventDefault={handleSubmit}>
     <div class="form-group">
       <div class="col-3 col-sm-12">
-        <label class="form-label label-sm " for="url">URL </label>
+        <label class="form-label label-sm" for="url">URL </label>
       </div>
       <div class="col-9 col-sm-12">
         <input
@@ -117,7 +120,7 @@
 
     <div class="form-group">
       <div class="col-3 col-sm-12">
-        <label class="form-label label-sm " for="selector"
+        <label class="form-label label-sm" for="selector"
           >Selector <p class="helper">
             (If it is class, the first character is a point, if it is an id, a
             pad)
@@ -147,7 +150,7 @@
       <div class="search-result">
         <div class="form-group search-result">
           <div class="col-3 col-sm-12">
-            <label class="form-label label-sm " for="select-frecuency"
+            <label class="form-label label-sm" for="select-frecuency"
               >Checking Frequency</label
             >
           </div>
