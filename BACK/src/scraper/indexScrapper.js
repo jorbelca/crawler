@@ -4,8 +4,6 @@ puppeteer.use(StealthPlugin());
 import "dotenv/config";
 
 export const urlData = async function run(url, selector) {
-  // const urlHost = await transformURL(url)
-  // { urlHost !== undefined ? urlHost : '' }
   const browser = await puppeteer.launch({
     headless: true,
     executablePath:
@@ -31,7 +29,7 @@ export const urlData = async function run(url, selector) {
 
     return html;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return error;
   } finally {
     await browser.close();
