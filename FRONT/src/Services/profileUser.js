@@ -36,7 +36,7 @@ export const changeProfileData = async (newData) => {
     })
     return response
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return error
   }
 

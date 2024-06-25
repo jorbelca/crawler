@@ -17,7 +17,7 @@ export const changeTime = async (time, id) => {
     })
     return response
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return error
   }
 

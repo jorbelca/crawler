@@ -1,8 +1,6 @@
 import { tokenSetter } from "../Helpers/tokenSetter";
 import { apiUrl } from "./register";
 
-
-
 export const getData = async () => {
   try {
     const response = await fetch(`${apiUrl}/api/data`, {
@@ -11,13 +9,12 @@ export const getData = async () => {
       headers: {
         "Content-Type": "application/json; charset=UTF-8 ",
         Accept: "application/json",
-        Authorization: tokenSetter()
+        Authorization: tokenSetter(),
       },
-    })
-    return response
+    });
+    return response;
   } catch (error) {
-    console.log(error);
-    return error
+    console.error(error);
+    return error;
   }
-
-}
+};

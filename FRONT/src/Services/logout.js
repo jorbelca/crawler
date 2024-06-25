@@ -1,4 +1,4 @@
-const apiUrl = "http://localhost:3030/api"
+const apiUrl = "http://localhost:3030/api";
 
 export const loginUser = async () => {
   try {
@@ -10,11 +10,10 @@ export const loginUser = async () => {
         "Content-Type": "application/json; charset=UTF-8 ",
         Accept: "application/json",
       },
-    })
-    return response.json()
+    });
+    return response.json();
   } catch (error) {
-    console.log(error);
-    return error
+    console.error(error);
+    return error;
   }
-
-}
+};
