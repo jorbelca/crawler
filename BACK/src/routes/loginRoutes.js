@@ -24,25 +24,32 @@ loginRouter.post("/", async (request, response) => {
     const passwordCorrect =
       user === null ? false : await bcrypt.compare(password, user.password);
 
-    let userToken;
+    if (!passwordCorrect) {
+      return response.status(401).json({ error: "Invalid password" });
+    }
 
-    if (passwordCorrect)
-      userToken = {
-        email: user.email,
-        username: user.username,
-        id: user._id,
-      };
+    let userToken = {
+      email: user.email,
+      username: user.username,
+      id: user._id,
+    };
 
     const token = jwt.sign(
       userToken,
       SECRET,
       {
-        expiresIn: 60 * 60 * 24 * 2,
+        expiresIn: 60 * 60 * 24 * 2, // 2 días
+        algorithm: "HS256",
       },
-      { algorithm: "RS256" }
+      (err, token) => {
+        if (err) {
+          return response
+            .status(500)
+            .json({ error: "Error signing token - " + err });
+        }
+        return response.status(200).json({ token: token });
+      }
     );
-
-    return response.status(200).json({ token: token });
   } catch (error) {
     console.log(error);
     return response.status(400).json({ error: error.message });

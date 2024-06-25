@@ -1,9 +1,7 @@
-import puppeteer from "puppeteer-extra"
-import StealthPlugin from "puppeteer-extra-plugin-stealth"
-puppeteer.use(StealthPlugin())
-import "dotenv/config"
-
-import { executablePath } from "puppeteer"
+import puppeteer from "puppeteer-extra";
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
+puppeteer.use(StealthPlugin());
+import "dotenv/config";
 
 export const urlData = async function run(url, selector) {
   // const urlHost = await transformURL(url)
