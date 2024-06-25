@@ -6,7 +6,7 @@ if (import.meta.env.VITE_NODE_ENV == "test") {
 }
 export const apiUrl = url;
 
-export const registerUser = async (email, username, password) => {
+export const registerUser = async (/** @type {string} */ email, /** @type {string} */ username, /** @type {string} */ password) => {
   try {
     const response = await fetch(`${apiUrl}/api/register`, {
       method: "POST",
