@@ -3,39 +3,54 @@ import StealthPlugin from "puppeteer-extra-plugin-stealth";
 puppeteer.use(StealthPlugin());
 import "dotenv/config";
 
+// FUNCION PRINCIPAL
 export const urlData = async function run(url, selector) {
-  const browser = await puppeteer.launch({
-    headless: true,
-    executablePath:
-      process.env.NODE_ENV === "production"
-        ? process.env.PUPPETEER_EXECUTABLE_PATH
-        : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-    args: ["--no-zygote", "--no-sandbox"],
-  });
+  const browser = await getBrowser();
+  const page = await browser.newPage();
   try {
-    const page = await browser.newPage();
-
     await page.goto(url, {
       waitUntil: "load",
+      timeout: 30000,
     });
     await page.setViewport({ width: 1080, height: 1024 });
-    await page.waitForSelector("body", 5000);
+    await page.waitForSelector("body", { timeout: 5000 });
 
-    const html = await page.$eval(
-      selector,
-      (el) => el.innerText,
-      await page.$("body")
-    );
+    const html = await page.$eval(selector, (el) => el.innerText);
 
     return html;
   } catch (error) {
-    console.error(error);
+    console.error(`Error fetching data from ${url}:`, error);
     return error;
   } finally {
-    await browser.close();
+    await page.close();
   }
 };
 
-const transformURL = (url) => {
-  if (url) return url.match(/\b((www)\.)[-A-Z0-9+&@#%?=~_|$!:,.;]*/gi)[0];
-};
+// FUNCIONES GESTORAS DE INSTANCIAS DEL NAVEGADOR
+
+let browserInstance = null;
+
+async function getBrowser() {
+  if (!browserInstance) {
+    browserInstance = await puppeteer.launch({
+      headless: true,
+      executablePath:
+        process.env.NODE_ENV === "production"
+          ? process.env.PUPPETEER_EXECUTABLE_PATH
+          : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+      args: ["--no-zygote", "--no-sandbox"],
+    });
+  }
+  return browserInstance;
+}
+
+export async function closeBrowser() {
+  if (browserInstance) {
+    await browserInstance.close();
+    browserInstance = null;
+  }
+}
+
+// const transformURL = (url) => {
+//   if (url) return url.match(/\b((www)\.)[-A-Z0-9+&@#%?=~_|$!:,.;]*/gi)[0];
+// };
