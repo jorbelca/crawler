@@ -26,7 +26,7 @@ const corsOptions = {
   optionsSuccessStatus: 204,
 };
 
-const app = express();
+export const app = express();
 // app.use(express.static('dist'));
 app.options("*", cors(corsOptions));
 app.use(cors(corsOptions));

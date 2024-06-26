@@ -1,5 +1,4 @@
-import { describe, it, expect, vi, assert } from "vitest";
-import puppeteer from "puppeteer";
+import { describe, it, expect} from "vitest";
 import { urlData } from "../src/scraper/indexScrapper";
 
 describe("urlData function", () => {
@@ -17,6 +16,5 @@ describe("urlData function", () => {
     const result = await urlData(url, selector);
 
     expect(result).toBeInstanceOf(Error);
-
   });
 });

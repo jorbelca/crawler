@@ -5,9 +5,9 @@ const credentials = {
 };
 
 const operate = {
-  url: "https://www.amazon.es/dp/B072K3YV79/ref=sspa_dk_detail_5?psc=1&pd_rd_i=B072K3YV79&pd_rd_w=zjiS7&content-id=amzn1.sym.5211011f-e3fb-4d92-b58e-b3527e67ddff&pf_rd_p=5211011f-e3fb-4d92-b58e-b3527e67ddff&pf_rd_r=5DW6WTRJ20BAF054MZBT&pd_rd_wg=Niqpb&pd_rd_r=f597600b-9f63-401a-8800-944d8c3bb72f&s=apparel&sp_csd=d2lkZ2V0TmFtZT1zcF9kZXRhaWw",
+  url: "https://www.amazon.es/AmazonBasics-recargables-precargadas-cubierta-exterior/dp/B00CWNMXQW/ref=pd_day0_d_sccl_3_3/262-6203639-6586141?pd_rd_w=oBdd8&content-id=amzn1.sym.ba6ffc34-ede0-4f68-807d-781b785733b1&pf_rd_p=ba6ffc34-ede0-4f68-807d-781b785733b1&pf_rd_r=2TZQCA006C63P4ZB8X0T&pd_rd_wg=EQRAL&pd_rd_r=a4c25110-d319-4e2a-b3b5-5c2103f4caaa&pd_rd_i=B00CWNMXQW&psc=1",
   selector: ".a-offscreen",
-  price: "16,00€",
+  price: "8,38€",
 };
 
 let token;
@@ -84,7 +84,7 @@ describe("Error", () => {
 describe("Operate", () => {
   it("Can operate a search", () => {
     window.localStorage.setItem("tokenUser", token);
-    cy.visit(`${url}/credent`);
+    cy.visit(`${url}/ops`);
 
     cy.contains("URL").get("input:first").clear().type(operate.url);
     cy.contains("Selector")
@@ -92,7 +92,7 @@ describe("Operate", () => {
       .clear()
       .type(operate.selector);
     cy.get("button").contains("Search").click();
-    cy.wait(3000);
+    cy.wait(10000);
     cy.contains(operate.price).should("be.visible");
     cy.contains("Checking Frequency")
       .get("#select-frecuency")
@@ -115,7 +115,7 @@ describe("Data", () => {
       .contains("Save")
       .click();
     // cy.contains("OK").should("be.visible");
-    cy.wait(1300);
+    cy.wait(5000);
     cy.get("select#selector").select(0);
     cy.contains("Now, it is checked every 1 hour").should("be.visible");
     cy.get("button#btn-del").click();
