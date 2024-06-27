@@ -8,12 +8,28 @@ export const urlData = async function run(url, selector) {
   const browser = await getBrowser();
   const page = await browser.newPage();
   try {
+    // Interceptar solicitudes para bloquear ciertos recursos
+    await page.setRequestInterception(true);
+    page.on("request", (request) => {
+      const resourceType = request.resourceType();
+      if (
+        resourceType === "image" ||
+        resourceType === "stylesheet" ||
+        resourceType === "font" ||
+        resourceType === "media"
+      ) {
+        request.abort();
+      } else {
+        request.continue();
+      }
+    });
+
     await page.goto(url, {
-      waitUntil: "load",
+      waitUntil: "networkidle2",
       timeout: 30000,
     });
     await page.setViewport({ width: 1080, height: 1024 });
-    await page.waitForSelector("body", { timeout: 5000 });
+    await page.waitForSelector("body", { timeout: 10000 });
 
     const html = await page.$eval(selector, (el) => el.innerText);
 

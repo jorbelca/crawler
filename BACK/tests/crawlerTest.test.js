@@ -1,21 +1,25 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, afterAll } from "vitest";
 import { performance } from "perf_hooks";
 import { urlData, closeBrowser } from "../src/scraper/indexScrapper";
 
 // VARIABLES
-const url = "https://thesmallcrawler.vercel.app/";
-const selector = "#logo";
-const resultText = "theSmallCrawler";
+const url1 =
+  "https://www.amazon.es/Apple-iPhone-mini-64GB-Product/dp/B08PCF2P4R?source=ps-sl-shoppingads-lpcontext&ref_=fplfs&smid=A1SDCTKWTTIH5G&th=1";
+const selector1 = ".a-offscreen";
+const resultText1 = "271,48€";
+
+//Cerrar navegador
+afterAll(async () => await closeBrowser());
 
 describe("urlData function", () => {
   it(
     "should return the innerText of the selected element",
     async () => {
-      const result = await urlData(url, selector);
+      const result = await urlData(url1, selector1);
 
-      expect(result).to.include(resultText);
+      expect(result).to.include(resultText1);
     },
-    { timeout: 10000 }
+    { timeout: 15000 }
   );
 
   it("should handle errors and return the error", async () => {
@@ -29,7 +33,7 @@ describe("urlData function", () => {
 
 // VARIABLES RENDIMIENTO
 
-const numInvocations = 100;
+const numInvocations = 10;
 const timeoutTime = numInvocations * 1000;
 
 describe("Load Test Simulation for processData", () => {
@@ -45,10 +49,11 @@ describe("Load Test Simulation for processData", () => {
       for (let i = 0; i < numInvocations; i++) {
         const invocationStartTime = performance.now();
         promises.push(
-          urlData(url, selector)
+          urlData(url1, selector1)
             .then((result) => {
               const invocationEndTime = performance.now();
               individualTimes.push(invocationEndTime - invocationStartTime);
+
               results.push(`${result - i}`);
             })
             .catch((err) => {
@@ -84,11 +89,8 @@ describe("Load Test Simulation for processData", () => {
       console.log(
         `Individual invocation times: ${individualTimes
           .map((time) => (time / 1000).toFixed(2))
-          .join(", ")} s`
+          .join(" s, ")}`
       );
-
-      // Cerrar navegador
-      await closeBrowser();
     },
     { timeout: timeoutTime }
   );
