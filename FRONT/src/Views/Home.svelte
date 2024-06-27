@@ -1,5 +1,5 @@
 <script>
-  import { Link } from "svelte-routing"
+  import { Link } from "svelte-routing";
 </script>
 
 <svelte:head>
@@ -32,7 +32,7 @@
     </ul>
   </div>
 
-  <Link class="link-about" to="/about"
+  <Link class="link-about" to="/about" style="text-decoration: none!important;"
     ><span class="link-about">About my site</span></Link
   >
 </main>
@@ -57,7 +57,6 @@
     font-weight: 100;
     line-height: 1.1;
     margin: auto;
-
     color: rgb(218, 165, 32);
   }
   .extended-text {
@@ -74,15 +73,9 @@
     font-weight: 100;
   }
 
-  .link-about:hover {
-    border-bottom: 0.5px solid goldenrod;
-    text-decoration: none;
-  }
-  a:visited {
-    text-decoration: none !important;
-    color: none;
-  }
+
   .warning {
     color: rgb(129, 3, 129);
   }
+
 </style>

@@ -109,6 +109,7 @@
 
               <Link
                 on:click={handleToggle}
+                id="btn_btn-link"
                 class="btn btn-link"
                 style="text-decoration:none; color:black"
                 to="/register">Register</Link
@@ -217,7 +218,7 @@
     header.navbar.nav.open {
       width: 100%;
       transition: 0.5s;
-      margin-bottom: 0px;
+      margin-bottom: 1vh;
     }
   }
   @media (min-width: 450px) {
