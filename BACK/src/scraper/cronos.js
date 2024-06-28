@@ -31,11 +31,11 @@ export const mappingOperations = async () => {
 
       // SI LOS DATOS ESCRAPEADOS CAMBIAN, QUE ENVIE UN EMAIL
       if (data !== lastData.data) {
-        const emailDB = await User.findById(Op.user).select({
+        const { email } = await User.findById(Op.user).select({
           email: 1,
           _id: 0,
         });
-        const { email } = emailDB;
+
         const mailOptions = {
           from: "crawlerj6@gmail.com",
           to: `${email}`,

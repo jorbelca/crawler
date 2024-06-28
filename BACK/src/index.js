@@ -16,6 +16,7 @@ import profileRouter from "./routes/getProfileData.js";
 import eliminateOpsRouter from "./routes/eliminateOpsRouter.js";
 import { cronoScraper } from "./scraper/cronos.js";
 import changeTimeRouter from "./routes/changeTimeRoutes.js";
+import { sendNotification } from "./email/nodemailer.js";
 
 const corsOptions = {
   origin: [
@@ -78,6 +79,12 @@ http.createServer(app).listen(PORT, function () {
   cronoScraper();
 });
 
-// import { refreshAccessToken } from "./email/testRefreshToken.js";
 
-// refreshAccessToken()
+const mailOptions = {
+  from: "crawlerjs6@gmail.com",
+  to: "jordi_belda@hotmail.com",
+  subject: "Correo de prueba desde Nodemailer",
+  text: "Este es un correo de prueba enviado usando OAuth 2.0 y Nodemailer. \n\nSi ya no deseas recibir estos correos, haz clic aquí para darte de baja.",
+  html: '<p>Este es un correo de prueba enviado usando OAuth 2.0 y Nodemailer.</p><p>Si ya no deseas recibir estos correos, haz clic <a href="http://tusitio.com/unsubscribe">aquí</a> para darte de baja.</p>',
+};
+sendNotification(mailOptions);

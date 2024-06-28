@@ -9,6 +9,7 @@ export const MAIL_PASSWORD = process.env.MAIL_PASSWORD;
 export const MAIL_CLIENT_ID = process.env.MAIL_CLIENT_ID;
 export const MAIL_CLIENT_SECRET = process.env.MAIL_CLIENT_SECRET;
 export const MAIL_REFRESH_TOKEN = process.env.MAIL_REFRESH_TOKEN;
+export const MAIL_ACCESS_TOKEN = process.env.MAIL_ACCESS_TOKEN;
 export const NODE_ENV = process.env.NODE_ENV;
 let Port;
 if (NODE_ENV == "test") {
