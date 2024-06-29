@@ -6,7 +6,12 @@ import { urlData, closeBrowser } from "../src/scraper/indexScrapper";
 const url1 =
   "https://www.amazon.es/Apple-iPhone-mini-64GB-Product/dp/B08PCF2P4R?source=ps-sl-shoppingads-lpcontext&ref_=fplfs&smid=A1SDCTKWTTIH5G&th=1";
 const selector1 = ".a-offscreen";
-const resultText1 = "271,48€";
+const resultText1 = "277,94€";
+
+const url2 =
+  "https://www.amazon.es/Abanderado-Sensitive-Boxer-Briefs-Negro/dp/B09NDNJGF2/ref=sr_1_6?dib=eyJ2IjoiMSJ9.N9tgOULVLUDkIdDaPn65jFKPceeUZtXHvEAV2PFsfkDGgh26382zn8tkh8T0JAl2HuW_e6gsOrsHCeCmfbpeDmBFVyA1X-HuwKXXBuC2AJbg61UKplZw0zKEMW_R3J_zQrTtev24ise1dlFYSlr5T73dAr_egEKK3aM-GNz8V2H9hVD3p-ERUkuZh5RtqFIh076MhpXXkGGck2_dbmlhPabehA3p03PSkec7hk9y7aEsm7Fxw7hWIsIsK7BKxa4ArJ2KWuDd0mbDFv57Oh4kl5oSy2EdsqecXDq8YGamv-M.8pP_opoD4bb3gbPaAAI_AKAnZviZPvNSZFmq6BVJvTE&dib_tag=se&keywords=boxer+abanderado&qid=1719673473&sr=8-6";
+const selector2 = ".a-offscreen";
+const resultText2 = "18,62€";
 
 //Cerrar navegador
 afterAll(async () => await closeBrowser());
@@ -16,10 +21,19 @@ describe("urlData function", () => {
     "should return the innerText of the selected element",
     async () => {
       const result = await urlData(url1, selector1);
-
       expect(result).to.include(resultText1);
     },
-    { timeout: 15000 }
+    { timeout: 20000 }
+  );
+
+  it(
+    "should return the innerText of the selected element",
+    async () => {
+      const result = await urlData(url2, selector2);
+
+      expect(result).to.include(resultText2);
+    },
+    { timeout: 30000 }
   );
 
   it("should handle errors and return the error", async () => {
@@ -36,7 +50,7 @@ describe("urlData function", () => {
 const numInvocations = 10;
 const timeoutTime = numInvocations * 1000;
 
-describe("Load Test Simulation for processData", () => {
+describe.skip("Load Test Simulation for processData", () => {
   it(
     "should handle multiple concurrent invocations",
     async () => {

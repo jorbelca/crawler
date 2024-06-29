@@ -14,7 +14,7 @@ searchRouter.post("/", tokenExtractor, async (req, res) => {
   } catch (error) {
     console.log(error);
 
-    return response.status(400).json({ error: error.message });
+    return res.status(400).json({ error: error.message });
   }
 });
 

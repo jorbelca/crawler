@@ -30,6 +30,9 @@
     if (response !== undefined || response.length > 0 || response !== null) {
       spinner.style.display = "none";
       data = await response;
+      data.forEach((data) => {
+        data.data = data.data.reverse();
+      });
     }
 
     if (res.status !== 200) {
@@ -98,7 +101,6 @@
 
 <main>
   <h1>DATA</h1>
-
   <div id="spinner" class="loading loading-lg" />
   <select id="selector" bind:value={dataTable}
     >{#each data as dato (dato.id)}
