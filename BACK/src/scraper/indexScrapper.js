@@ -28,7 +28,7 @@ export const urlData = async function run(url, selector, retries = 0) {
 
     await page.goto(url, {
       waitUntil: "networkidle2",
-      timeout: 20000,
+      timeout: 25000,
     });
     await page.setViewport({ width: 1080, height: 1024 });
     await page.waitForSelector(selector, { timeout: 5000 });
