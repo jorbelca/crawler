@@ -1,0 +1,47 @@
+
+# Usa una imagen base de Node.js
+FROM node:latest
+
+# Establece el directorio de trabajo en el contenedor
+WORKDIR /usr/src/app
+
+# Copia el archivo package.json y package-lock.json
+COPY package*.json ./
+
+#Limpiar archivos temporales
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# Instala las dependencias
+RUN npm install
+
+# Instalar Chromium desde los repositorios oficiales
+RUN apt-get update && \
+    apt-get install -y chromium
+
+# Configura Puppeteer para utilizar Chromium
+ENV PUPPETEER_PRODUCT=chromium
+
+# Configura el path ejecutable de Chromium para Puppeteer
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+
+# Configura Puppeteer para utilizar Chrome
+ENV PUPPETEER_PRODUCT=chromium
+
+# Define una variable de entorno para el entorno de ejecución
+ENV ENVIRONMENT=docker
+
+# Copia el resto de la aplicación
+COPY . .
+
+# Exponer el puerto en el que correrá el servidor
+EXPOSE 3030
+
+# Comando para ejecutar la aplicación en modo desarrollo
+CMD [ "node", "src/index.js" ]
+
+
+
+# Para la creacion del contenedor
+# docker run -p 3030:3030 --cap-add=SYS_ADMIN --cap-add=NET_ADMIN servidor_dev
+
+# Corre el contenedor para desarrollo
+#docker run -p 3030:3030 servidor_dev

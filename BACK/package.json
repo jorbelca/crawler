@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node --max_old_space_size=4096 src/index.js",
+    "docker": "docker run -p 3030:3030 --cap-add=SYS_ADMIN --cap-add=NET_ADMIN servidor_dev",
     "dev": "nodemon src/index.js",
     "test": "NODE_ENV=test node --max_old_space_size=4096 src/index.js ",
     "vitest": "npx vitest run"

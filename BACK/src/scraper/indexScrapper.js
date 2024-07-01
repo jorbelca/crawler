@@ -31,7 +31,7 @@ export const urlData = async function run(url, selector, retries = 0) {
       timeout: 25000,
     });
     await page.setViewport({ width: 1080, height: 1024 });
-    await page.waitForSelector(selector, { timeout: 5000 });
+    await page.waitForSelector(selector, { timeout: 10000 });
 
     const data = await page.$eval(selector, (el) => el.innerText);
 
@@ -63,7 +63,7 @@ async function getBrowser() {
     browserInstance = await puppeteer.launch({
       headless: true,
       executablePath:
-        process.env.NODE_ENV === "production"
+        process.env.ENVIRONMENT === "docker"
           ? process.env.PUPPETEER_EXECUTABLE_PATH
           : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
       args: ["--no-zygote", "--no-sandbox"],

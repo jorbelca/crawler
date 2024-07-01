@@ -11,7 +11,7 @@ const resultText1 = "277,94€";
 const url2 =
   "https://www.amazon.es/Abanderado-Sensitive-Boxer-Briefs-Negro/dp/B09NDNJGF2/ref=sr_1_6?dib=eyJ2IjoiMSJ9.N9tgOULVLUDkIdDaPn65jFKPceeUZtXHvEAV2PFsfkDGgh26382zn8tkh8T0JAl2HuW_e6gsOrsHCeCmfbpeDmBFVyA1X-HuwKXXBuC2AJbg61UKplZw0zKEMW_R3J_zQrTtev24ise1dlFYSlr5T73dAr_egEKK3aM-GNz8V2H9hVD3p-ERUkuZh5RtqFIh076MhpXXkGGck2_dbmlhPabehA3p03PSkec7hk9y7aEsm7Fxw7hWIsIsK7BKxa4ArJ2KWuDd0mbDFv57Oh4kl5oSy2EdsqecXDq8YGamv-M.8pP_opoD4bb3gbPaAAI_AKAnZviZPvNSZFmq6BVJvTE&dib_tag=se&keywords=boxer+abanderado&qid=1719673473&sr=8-6";
 const selector2 = ".a-offscreen";
-const resultText2 = "18,62€";
+const resultText2 = "17,25€";
 
 //Cerrar navegador
 afterAll(async () => await closeBrowser());
